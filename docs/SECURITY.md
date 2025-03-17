@@ -20,12 +20,4 @@ We actively maintain and apply security patches to the following versions:
 | Previous | ⚠️ Limited Support |
 | Older    | ❌ Not Supported   |
 
-## Security Best Practices
-
-To keep your bot instance secure:
-
--   Keep dependencies updated.
--   Use strong authentication for access.
--   Follow best coding practices to prevent injection attacks.
-
 Thank you for helping us keep our community safe!
