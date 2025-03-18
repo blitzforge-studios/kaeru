@@ -1,10 +1,11 @@
 import { time, bold } from "discord.js";
 import { emojis } from "../resources/emojis.js";
 import { defaultLockTicketPermissions } from "../resources/BotPermissions.js";
-import { checkPermissions } from "./checkPermissions.js";
+import { checkBotPermissions } from "./checkPermissions.js";
 
 export async function setLockedAndUpdateMessage(interaction, reason = "") {
-    checkPermissions(interaction, defaultLockTicketPermissions);
+    const botHasPermission = await checkBotPermissions(interaction, defaultLockTicketPermissions);
+    if (!botHasPermission) return;
 
     const formattedTime = time(new Date(), "R");
 

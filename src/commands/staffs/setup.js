@@ -14,7 +14,7 @@ import {
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 import { basePermissions } from "../../resources/BotPermissions.js";
-import { checkPermissions } from "../../functions/checkPermissions.js";
+import { checkBotPermissions } from "../../functions/checkPermissions.js";
 import {
     saveStaffRoleId,
     setupLoggingChannel,
@@ -472,7 +472,11 @@ export default {
                 )
         ),
     execute: async ({ interaction }) => {
-        await checkPermissions(interaction, basePermissions);
+        const botHasPermission = await checkBotPermissions(
+            interaction,
+            basePermissions
+        );
+        if (!botHasPermission) return;
 
         const guild = interaction.guild;
 

@@ -15,7 +15,7 @@ import {
 } from "../../functions/database.js";
 import { emojis } from "../../resources/emojis.js";
 import { basePermissions } from "../../resources/BotPermissions.js";
-import { checkPermissions } from "../../functions/checkPermissions.js";
+import { checkBotPermissions } from "../../functions/checkPermissions.js";
 
 export default {
     data: new SlashCommandBuilder()
@@ -270,8 +270,13 @@ export default {
                 })
                 .setRequired(false)
         ),
-    execute: async ({ client, interaction }) => {
-        await checkPermissions(interaction, basePermissions);
+    execute: async ({ interaction }) => {
+        const botHasPermission = await checkBotPermissions(
+            interaction,
+            basePermissions
+        );
+        if (!botHasPermission) return;
+
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
         const target = interaction.options.getUser("target");

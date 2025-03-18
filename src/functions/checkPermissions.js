@@ -10,7 +10,7 @@ function hasRequiredPermissions(interaction, permission) {
     return botMember?.permissions.has(permission) ?? false;
 }
 
-export const checkPermissions = async (
+export const checkBotPermissions = async (
     interaction,
     permissions,
     customMessage = ""
@@ -33,39 +33,45 @@ export const checkPermissions = async (
                     )}\`. ${errorMessage || customMessage}`,
                     flags: MessageFlags.Ephemeral,
                 });
-                return true;
+                return false; // İzin yoksa false dön
             }
         }
-
-        if (interaction.guild) {
-            for (const { permission, errorMessage } of permissions) {
-                let checkingPermission = true;
-                if (interaction.member) {
-                    checkingPermission =
-                        interaction.member.permissions.has(permission);
-                }
-
-                if (!checkingPermission) {
-                    await interaction.reply({
-                        content: `${
-                            emojis.important
-                        } You don't have \`${Object.keys(
-                            PermissionFlagsBits
-                        ).find(
-                            (key) => PermissionFlagsBits[key] === permission
-                        )}\` permission to do this action, <@${
-                            interaction.user.id
-                        }>. ${errorMessage || ""}`,
-                        flags: MessageFlags.Ephemeral,
-                    });
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return true; // Tüm izinler varsa true dön
     } catch (error) {
-        console.error("[Permission Error] Unexpected error:", error);
-        return true;
+        console.error("[Bot Permission Error] Unexpected error:", error);
+        return false; // Hata durumunda false dön
+    }
+};
+
+export const checkMemberPermissions = async (
+    interaction,
+    permissions,
+    customMessage = ""
+) => {
+    try {
+        if (!interaction.guild || !interaction.member) return false;
+
+        for (const { permission, errorMessage } of permissions) {
+            const hasMemberPermission =
+                interaction.member.permissions.has(permission);
+
+            if (!hasMemberPermission) {
+                await interaction.reply({
+                    content: `${
+                        emojis.important
+                    } You don't have \`${Object.keys(PermissionFlagsBits).find(
+                        (key) => PermissionFlagsBits[key] === permission
+                    )}\` permission to do this action, <@${
+                        interaction.user.id
+                    }>. ${errorMessage || customMessage}`,
+                    flags: MessageFlags.Ephemeral,
+                });
+                return false; // İzin yoksa false dön
+            }
+        }
+        return true; // Tüm izinler varsa true dön
+    } catch (error) {
+        console.error("[Member Permission Error] Unexpected error:", error);
+        return false; // Hata durumunda false dön
     }
 };

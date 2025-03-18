@@ -11,7 +11,7 @@ import {
 import { lockButton } from "../modals/create-ticket-title.js";
 import { emojis } from "../../resources/emojis.js";
 import { defaultLockTicketPermissions } from "../../resources/BotPermissions.js";
-import { checkPermissions } from "../../functions/checkPermissions.js";
+import { checkBotPermissions } from "../../functions/checkPermissions.js";
 
 const menu3 = new StringSelectMenuBuilder()
     .setCustomId("ticket-select-menu")
@@ -47,7 +47,11 @@ export default {
     },
 
     execute: async ({ interaction }) => {
-        checkPermissions(interaction, defaultLockTicketPermissions);
+        const botHasPermission = await checkBotPermissions(
+            interaction,
+            defaultLockTicketPermissions
+        );
+        if (!botHasPermission) return;
 
         const selectedValue = interaction.values[0];
         const formattedTime = time(new Date(), "R");
@@ -74,11 +78,6 @@ export default {
             case "ticket-menu-done": {
                 await interaction.channel.send({
                     content: `${emojis.ticketDone} **${interaction.user.username}** __closed__ this as completed ${formattedTime}`,
-                });
-
-                await interaction.reply({
-                    content: `Ticket closed as completed ${formattedTime}`,
-                    flags: MessageFlags.Ephemeral,
                 });
 
                 await interaction.channel.setLocked(true);

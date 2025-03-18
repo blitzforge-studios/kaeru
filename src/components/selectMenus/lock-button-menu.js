@@ -1,13 +1,13 @@
 import { setLockedAndUpdateMessage } from "../../functions/lockTicket.js";
 import { defaultLockTicketPermissions } from "../../resources/BotPermissions.js";
-import { checkPermissions } from "../../functions/checkPermissions.js";
+import { checkBotPermissions } from "../../functions/checkPermissions.js";
 
 export default {
     data: {
         customId: "ticket-lock-reason",
     },
     execute: async ({ interaction }) => {
-        checkPermissions(interaction, defaultLockTicketPermissions);
+        checkBotPermissions(interaction, defaultLockTicketPermissions);
 
         let value = interaction.values[0];
 

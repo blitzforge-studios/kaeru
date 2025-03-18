@@ -9,27 +9,25 @@ import {
 } from "discord.js";
 
 import { defaultLockTicketPermissions } from "../../resources/BotPermissions.js";
-import { checkPermissions } from "../../functions/checkPermissions.js";
-import { emojis } from "../../resources/emojis.js";
+import { checkBotPermissions, checkMemberPermissions } from "../../functions/checkPermissions.js";
 
 export default {
     data: {
         customId: "ticket-lock-conversation",
     },
     execute: async ({ interaction }) => {
-        if (
-            !interaction.member.permissions.has(
-                PermissionFlagsBits.ManageThreads
-            )
-        )
-            return interaction.reply({
-                content: `${emojis.important} You don't have ${bold(
-                    "Manage Threads"
-                )} permission to do this action, <@${interaction.user.id}>.`,
-                flags: MessageFlags.Ephemeral,
-            });
+        const memberHasPermission = await checkMemberPermissions(interaction, [
+            {
+                permission: PermissionFlagsBits.ManageThreads,
+            },
+        ]);
+        if (!memberHasPermission) return;
 
-        await checkPermissions(interaction, defaultLockTicketPermissions);
+        const botHasPermission = await checkBotPermissions(
+            interaction,
+            defaultLockTicketPermissions
+        );
+        if (!botHasPermission) return;
 
         const lockButtonExplanation = new EmbedBuilder()
             .setTitle("Lock conversation on this ticket")
