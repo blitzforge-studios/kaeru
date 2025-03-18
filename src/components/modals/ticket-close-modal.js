@@ -1,4 +1,4 @@
-import { time, MessageFlags, EmbedBuilder } from "discord.js";
+import { time, EmbedBuilder } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 
 export default {
@@ -12,7 +12,7 @@ export default {
 
         const formattedTime = time(new Date(), "R");
 
-        await interaction.channel.send({
+        await interaction.reply({
             content: `${emojis.ticketClose} **${interaction.user.username}** __closed__ this ticket as completed at ${formattedTime}`,
             embeds: [
                 new EmbedBuilder()
@@ -23,11 +23,6 @@ export default {
                     .setColor(0x388bfd)
                     .setDescription(closeReason),
             ],
-        });
-
-        await interaction.reply({
-            content: `Ticket has been successfully closed with the reason: "${closeReason}".`,
-            flags: MessageFlags.Ephemeral,
         });
 
         await interaction.channel.setLocked(true);

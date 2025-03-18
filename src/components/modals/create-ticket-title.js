@@ -12,8 +12,11 @@ import {
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 import { getStaffRoleId } from "../../functions/database.js";
-import { defaultTicketPermissions } from "../../resources/BotPermissions.js";
-import { checkPermissions } from "../../functions/checkPermissions.js";
+import {
+    basePermissions,
+    defaultTicketPermissions,
+} from "../../resources/BotPermissions.js";
+import { checkBotPermissions } from "../../functions/checkPermissions.js";
 
 let lockButton = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
@@ -30,7 +33,7 @@ export default {
     },
 
     execute: async ({ interaction }) => {
-        checkPermissions(interaction, defaultTicketPermissions);
+        if (!(await checkBotPermissions(interaction, basePermissions))) return;
 
         const ticketTitle =
             interaction.fields.getTextInputValue("ticket-title");

@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 import { basePermissions } from "../../resources/BotPermissions.js";
-import { checkPermissions } from "../../functions/checkPermissions.js";
+import { checkBotPermissions } from "../../functions/checkPermissions.js";
 
 export default {
     data: new ContextMenuCommandBuilder()
@@ -33,9 +33,9 @@ export default {
         ]),
     execute: async ({ interaction, client }) => {
         if (InteractionContextType.Guild) {
-            if (await checkPermissions(interaction, basePermissions)) return;
+            if (!(await checkBotPermissions(interaction, basePermissions)))
+                return;
         }
-
         try {
             if (
                 Object.keys(interaction.authorizingIntegrationOwners).every(
@@ -46,14 +46,11 @@ export default {
             } else {
                 await interaction.deferReply();
             }
-
             const user = client.users.fetch(interaction.targetId, {
                 force: true,
             });
-
             user.then(async (resolved) => {
                 const imageURI = resolved.bannerURL({ size: 4096 });
-
                 if (imageURI === null) {
                     await interaction.editReply({
                         content: `${emojis.important} Hmm, looks like this user doesn’t have a banner set. Maybe it’s lost in the folds of time?`,
@@ -65,7 +62,6 @@ export default {
                         )
                         .setImage(imageURI)
                         .setColor(process.env.EMBED_COLOR);
-
                     await interaction.editReply({
                         embeds: [embed],
                     });
@@ -73,7 +69,6 @@ export default {
             });
         } catch (error) {
             console.error(error);
-
             return interaction.editReply({
                 content: `${emojis.danger} Oops! Something went wrong. Maybe a glitch in the timeline?`,
             });

@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 import { basePermissions } from "../../resources/BotPermissions.js";
-import { checkPermissions } from "../../functions/checkPermissions.js";
+import { checkBotPermissions } from "../../functions/checkPermissions.js";
 
 export default {
     data: new SlashCommandBuilder()
@@ -38,7 +38,8 @@ export default {
         ]),
     execute: async ({ interaction }) => {
         if (InteractionContextType.Guild) {
-            if (await checkPermissions(interaction, basePermissions)) return;
+            if (!(await checkBotPermissions(interaction, basePermissions)))
+                return;
         }
 
         await interaction.deferReply();

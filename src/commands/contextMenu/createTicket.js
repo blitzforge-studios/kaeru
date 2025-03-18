@@ -11,7 +11,7 @@ import {
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 import { defaultTicketPermissions } from "../../resources/BotPermissions.js";
-import { checkPermissions } from "../../functions/checkPermissions.js";
+import { checkBotPermissions } from "../../functions/checkPermissions.js";
 import { lockButton } from "../../components/modals/create-ticket-title.js";
 
 export default {
@@ -29,7 +29,8 @@ export default {
         .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
         .setContexts([InteractionContextType.Guild]),
     execute: async ({ interaction }) => {
-        await checkPermissions(interaction, defaultTicketPermissions);
+        if (!(await checkBotPermissions(interaction, defaultTicketPermissions)))
+            return;
 
         const message = interaction.options.getMessage("message");
 
