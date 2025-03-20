@@ -37,15 +37,7 @@ export default {
                 return;
         }
 
-        if (
-            Object.keys(interaction.authorizingIntegrationOwners).every(
-                (key) => key == ApplicationIntegrationType.UserInstall
-            )
-        ) {
-            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-        } else {
-            await interaction.deferReply();
-        }
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
         const message = interaction.options.getMessage("message");
 
