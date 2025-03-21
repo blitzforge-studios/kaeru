@@ -131,3 +131,5 @@ dist
 
 # database
 data
+
+.DS_Store
