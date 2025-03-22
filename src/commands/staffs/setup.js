@@ -505,7 +505,7 @@ export default {
                 .setDescription(
                     embedDescription
                         ? embedDescription
-                        : `# ${emojis.button} Create a Ticket\nIf you're experiencing an ticket with our product or service, please use the "Create ticket" button to report it. This includes any server-related tickets you may be encountering in our Discord server.`
+                        : `# ${emojis.button} Create a Ticket\nIf you're experiencing an issue with our product or service, please use the "Create ticket" button to report it. This includes any server-related tickets you may be encountering in our Discord server.`
                 )
                 .setColor(embedColor ? embedColor : process.env.EMBED_COLOR)
                 .setImage(
