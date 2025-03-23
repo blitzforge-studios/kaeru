@@ -1,7 +1,7 @@
 import { AuditLogEvent, Events, time } from "discord.js";
 import { row3 } from "../../components/selectMenus/ticket-select-menu-states.js";
-import { lockButton } from "../../components/modals/create-ticket-title.js";
 import { emojis } from "../../resources/emojis.js";
+import { lockButtonRow } from "../../resources/buttons.js";
 
 export default {
     name: Events.ThreadUpdate,
@@ -38,7 +38,7 @@ export default {
 
             if (pinnedMessage) {
                 await pinnedMessage.edit({
-                    components: [row3, lockButton],
+                    components: [row3, lockButtonRow],
                 });
             } else {
                 return;
@@ -47,7 +47,7 @@ export default {
                 //
                 // if (message) {
                 //     await message.edit({
-                //         components: [row3, lockButton],
+                //         components: [row3, lockButtonRow],
                 //     });
                 // }
             }

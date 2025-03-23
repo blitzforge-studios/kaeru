@@ -12,7 +12,7 @@ import {
 import { emojis } from "../../resources/emojis.js";
 import { defaultTicketPermissions } from "../../resources/BotPermissions.js";
 import { checkBotPermissions } from "../../functions/checkPermissions.js";
-import { lockButton } from "../../components/modals/create-ticket-title.js";
+import { lockButtonRow } from "../../resources/buttons.js";
 
 export default {
     data: new ContextMenuCommandBuilder()
@@ -76,7 +76,7 @@ export default {
 
         await thread.send({
             content: `## ${emojis.ticket} <@${interaction.user.id}>, you have opened a quick-support for this message\n> ${message.content}\n> -# Jump to [message](${message.url})\n> -# ———————————————\n- Message sent by __@${message.author.username}__`,
-            components: [menuRow, lockButton],
+            components: [menuRow, lockButtonRow],
             flags: MessageFlags.HasThread,
         });
 

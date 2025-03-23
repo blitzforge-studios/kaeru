@@ -6,12 +6,11 @@ import {
     TextInputBuilder,
     TextInputStyle,
     time,
-    MessageFlags,
 } from "discord.js";
-import { lockButton } from "../modals/create-ticket-title.js";
 import { emojis } from "../../resources/emojis.js";
 import { defaultLockTicketPermissions } from "../../resources/BotPermissions.js";
 import { checkBotPermissions } from "../../functions/checkPermissions.js";
+import { lockButtonRow } from "../../resources/buttons.js";
 
 const menu3 = new StringSelectMenuBuilder()
     .setCustomId("ticket-select-menu")
@@ -115,7 +114,7 @@ export default {
 
                 const row2 = new ActionRowBuilder().addComponents(menu2);
 
-                await interaction.update({ components: [row2, lockButton] });
+                await interaction.update({ components: [row2, lockButtonRow] });
 
                 await interaction.channel.send({
                     content: `${emojis.ticketStale} **${interaction.user.username}** __closed__ this as not planned ${formattedTime}`,
@@ -134,7 +133,7 @@ export default {
                     `${interaction.user.username} marked as open`
                 );
 
-                await interaction.update({ components: [row3, lockButton] });
+                await interaction.update({ components: [row3, lockButtonRow] });
                 break;
             }
 

@@ -1,4 +1,5 @@
 import { MessageFlags } from "discord.js";
+import { labelMenuRow } from "../../resources/selectMenus.js";
 
 export default {
     data: {
@@ -29,6 +30,28 @@ export default {
 
         try {
             await interaction.channel.setName(newTitle);
+
+            const secondMenu = interaction.message.components[1];
+
+            const updatedSecondMenu = {
+                type: 1,
+                components: [
+                    {
+                        type: secondMenu.components[0].type,
+                        custom_id: secondMenu.components[0].customId,
+                        disabled: true,
+                        options: secondMenu.components[0].options,
+                        placeholder: secondMenu.components[0].placeholder,
+                    },
+                ],
+            };
+
+            // Bileşenleri birleştir
+            const updatedComponents = [firstMenu.toJSON(), updatedSecondMenu];
+
+            // Mesajı güncelle
+            await interaction.message.edit({ components: updatedComponents });
+
             await interaction.reply({
                 content: `Ticket title updated to: ${newTitle}`,
                 flags: MessageFlags.Ephemeral,
