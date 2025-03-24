@@ -5,14 +5,12 @@ import {
     InteractionContextType,
     ChannelType,
     MessageFlags,
-    StringSelectMenuBuilder,
-    StringSelectMenuOptionBuilder,
-    ActionRowBuilder,
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 import { defaultTicketPermissions } from "../../resources/BotPermissions.js";
 import { checkBotPermissions } from "../../functions/checkPermissions.js";
 import { lockButtonRow } from "../../resources/buttons.js";
+import { ticketMenuRow } from "../../resources/selectMenus.js";
 
 export default {
     data: new ContextMenuCommandBuilder()
@@ -36,7 +34,7 @@ export default {
 
         if (message.channel.isThread()) {
             return interaction.reply({
-                content: `${emojis.info} You can't create ticket inside ticket. Huh?`,
+                content: `# ${emojis.reactions.reaction_question}\nYou can't create ticket inside thread. Huh... w-what is going on?`,
                 flags: MessageFlags.Ephemeral,
             });
         }
@@ -44,27 +42,6 @@ export default {
         await interaction.deferReply({
             flags: MessageFlags.Ephemeral,
         });
-
-        const menu = new StringSelectMenuBuilder()
-            .setCustomId("ticket-select-menu")
-            .setDisabled(false)
-            .setMaxValues(1)
-            .setPlaceholder("Action to close ticket")
-            .addOptions(
-                new StringSelectMenuOptionBuilder()
-                    .setLabel("Close as completed")
-                    .setValue("ticket-menu-close")
-                    .setDescription("Done, closed, fixed, resolved")
-                    .setEmoji(emojis.ticketDone)
-                    .setDefault(false),
-                new StringSelectMenuOptionBuilder()
-                    .setLabel("Close as not planned")
-                    .setValue("ticket-menu-duplicate")
-                    .setDescription("Won’t fix, can’t repo, duplicate, stale")
-                    .setEmoji(emojis.ticketStale)
-            );
-
-        const menuRow = new ActionRowBuilder().addComponents(menu);
 
         let thread = await interaction.channel.threads.create({
             name: `— Quick-ticket by ${interaction.user.username}`,
@@ -76,7 +53,7 @@ export default {
 
         await thread.send({
             content: `## ${emojis.ticket} <@${interaction.user.id}>, you have opened a quick-support for this message\n> ${message.content}\n> -# Jump to [message](${message.url})\n> -# ———————————————\n- Message sent by __@${message.author.username}__`,
-            components: [menuRow, lockButtonRow],
+            components: [ticketMenuRow, lockButtonRow],
             flags: MessageFlags.HasThread,
         });
 
