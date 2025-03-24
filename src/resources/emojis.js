@@ -28,11 +28,29 @@ export const emojis = {
 
     // issue labels
     label: {
-        bugLabel: "<:Bug:1338967370319790193>",
-        rewardLabel: "<:Reward:1338967398199328850>",
-        questionLabel: "<:Question:1338967382990913657>",
-        discussionLabel: "<:Discussion:1338967413177454714>",
-        helpLabel: "<:Help:1338967433142079558>",
+        bugLabel: "<:label_bug:1353798224481091595>",
+        rewardLabel: "<:label_reward:1353798275349745735>",
+        questionLabel: "<:label_question:1353798263119020082>",
+        discussionLabel: "<:label_discussion:1353798237475307571>",
+        helpLabel: "<:label_help:1353798248875167805>",
+    },
+
+    reactions: {
+        // kaeru
+        reaction_heart: "<:react_heart:1353726701594738751>",
+        reaction_thumbsup: "<:react_thumbsup:1353726723128037487>",
+        reaction_thumbsdown: "<:react_thumbsdown:1353726735967064145>",
+        reaction_haha: "<:react_haha:1353726756007313428>",
+        reaction_emphasize: "<:react_emphasize:1353726780523151472>",
+        reaction_question: "<:react_question:1353726792606683209>",
+
+        // user
+        reaction_heart_u: "<:reaction_heart_u:1353766045424422912>",
+        reaction_thumbsup_u: "<:reaction_thumbsup_u:1353766065750016021>",
+        reaction_thumbsdown_u: "<:reaction_thumbsdown_u:1353766081252167700>",
+        reaction_haha_u: "<:reaction_haha_u:1353766334357569537>",
+        reaction_emphasize_u: "<:reaction_emphasize_u:1353766349016530996>",
+        reaction_question_u: "<:reaction_question_u:1353766362622984344>",
     },
 
     // other
@@ -44,5 +62,5 @@ export const emojis = {
     safety: "<:safety:1331654372744233040>",
     doorEnter: "<:door_enter:1331678912866156595>",
     swap: "<:swap:1331704952833179780>",
-    globe: "<:globe:1331705467839320074>"
+    globe: "<:globe:1331705467839320074>",
 };
