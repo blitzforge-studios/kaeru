@@ -28,11 +28,11 @@ export const emojis = {
 
     // issue labels
     label: {
-        bugLabel: "<:Bug:1338967370319790193>",
-        rewardLabel: "<:Reward:1338967398199328850>",
-        questionLabel: "<:Question:1338967382990913657>",
-        discussionLabel: "<:Discussion:1338967413177454714>",
-        helpLabel: "<:Help:1338967433142079558>",
+        bugLabel: "<:label_bug:1353798224481091595>",
+        rewardLabel: "<:label_reward:1353798275349745735>",
+        questionLabel: "<:label_question:1353798263119020082>",
+        discussionLabel: "<:label_discussion:1353798237475307571>",
+        helpLabel: "<:label_help:1353798248875167805>",
     },
 
     // other
@@ -44,5 +44,5 @@ export const emojis = {
     safety: "<:safety:1331654372744233040>",
     doorEnter: "<:door_enter:1331678912866156595>",
     swap: "<:swap:1331704952833179780>",
-    globe: "<:globe:1331705467839320074>"
+    globe: "<:globe:1331705467839320074>",
 };
