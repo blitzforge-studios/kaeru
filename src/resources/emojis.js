@@ -37,12 +37,12 @@ export const emojis = {
 
     reactions: {
         // kaeru
-        reaction_heart: "<:react_heart:1353726701594738751>",
-        reaction_thumbsup: "<:react_thumbsup:1353726723128037487>",
-        reaction_thumbsdown: "<:react_thumbsdown:1353726735967064145>",
-        reaction_haha: "<:react_haha:1353726756007313428>",
-        reaction_emphasize: "<:react_emphasize:1353726780523151472>",
-        reaction_question: "<:react_question:1353726792606683209>",
+        reaction_heart: "<:react_heart:1353809181010034778>",
+        reaction_thumbsup: "<:react_thumbsUp:1353809477194879016>",
+        reaction_thumbsdown: "<:react_thumbsDown:1353809276077998090>",
+        reaction_haha: "<:react_haha:1353809153197342820>",
+        reaction_emphasize: "<:react_emphasize:1353808962096468061>",
+        reaction_question: "<:react_question:1353809206079131701>",
 
         // user
         reaction_heart_u: "<:reaction_heart_u:1353766045424422912>",
