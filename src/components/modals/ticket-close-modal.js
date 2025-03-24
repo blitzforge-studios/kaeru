@@ -20,7 +20,7 @@ export default {
                         name: `${interaction.user.username} commented`,
                         iconURL: interaction.user.displayAvatarURL(),
                     })
-                    .setColor(0x388bfd)
+                    .setColor(0xff3500)
                     .setDescription(closeReason),
             ],
         });
