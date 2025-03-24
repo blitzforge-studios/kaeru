@@ -4,6 +4,7 @@ import {
     ApplicationIntegrationType,
     InteractionContextType,
     MessageFlags,
+    AllowedMentionsTypes,
 } from "discord.js";
 import translate from "@iamtraction/google-translate";
 import { emojis } from "../../resources/emojis.js";
@@ -52,7 +53,7 @@ export default {
                 : interaction.locale;
 
             const translated = await translate(
-                message.content.replace(/(<a?)?:\w+:(\d{18}>)?/g, ""),
+                message.content.replace(/<a?:.+?:\d{18}>/g, ""), // Discord emojilerini temizle
                 { to: locale }
             );
 
@@ -67,7 +68,7 @@ export default {
         } catch (error) {
             console.log(error);
             await interaction.editReply({
-                content: `${emojis.danger} Oh no! A temporal anomaly occurred while translating. Let’s try again later, shall we?`,
+                content: `${emojis.error} Oh no! A temporal anomaly occurred while translating. Let’s try again later, shall we?`,
             });
         }
     },

@@ -68,7 +68,7 @@ export default {
             console.error("Error fetching user or avatar:", error);
 
             return interaction.editReply({
-                content: `${emojis.important} Hmm, looks like this person’s gone missing in action. Are you sure they’re around?`,
+                content: `${emojis.danger} Hmm, looks like this person’s gone missing in action. Are you sure they’re around?`,
             });
         }
     },

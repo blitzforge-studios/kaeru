@@ -469,7 +469,7 @@ export default {
                             expiryTime,
                             "R"
                         )}\n> "${reason}" reason.\n\nNow they have ${warnings} warnings.\n\n> _${
-                            emojis.important
+                            emojis.danger
                         } Logs channel has not been settled. Please use </setup logs:1223975368138952826> command._`,
                         flags: MessageFlags.Ephemeral,
                     });
@@ -524,7 +524,7 @@ export default {
                             expiryTime,
                             "R"
                         )}\n> "${reason}" reason.\n\nNow they have ${warnings} warnings.\n\n> _${
-                            emojis.important
+                            emojis.danger
                         } Logs channel has not been settled. Please use </setup logs:1223975368138952826> command._`,
                         flags: MessageFlags.Ephemeral,
                     });
@@ -562,7 +562,7 @@ export default {
             console.log(err);
 
             return interaction.editReply({
-                content: `${emojis.danger} Are we sure they are not timeouted already?\n-# If you think something is not right, please contact with **@neodevils**.`,
+                content: `${emojis.error} Are we sure they are not timeouted already?\n-# If you think something is not right, please contact with **@neodevils**.`,
                 flags: MessageFlags.Ephemeral,
             });
         }

@@ -17,9 +17,9 @@ export const emojis = {
     bubble: "<:bubble:1331654206540746863>",
 
     // information
-    info: "<:info:1331654286081523833>",
-    danger: "<:danger:1331654232985702410>",
-    important: "<:important:1331654267865534514>",
+    info: "<:react_Info:1353837616256122981>",
+    error: "<:react_Error:1353837592919015567>",
+    danger: "<:react_Danger:1353837568755765359>",
     redirect: "<:redirect:1331668579770306692>",
 
     // user

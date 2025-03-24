@@ -99,7 +99,7 @@ export default {
             const errorRow = new ActionRowBuilder().addComponents(errorButton);
 
             await interaction.editReply({
-                content: `${emojis.important} An error occurred while fetching the image. Please try again later or use the button below to access the source.`,
+                content: `${emojis.danger} An error occurred while fetching the image. Please try again later or use the button below to access the source.`,
                 components: [errorRow],
             });
         }

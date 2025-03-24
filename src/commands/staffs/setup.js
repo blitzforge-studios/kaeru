@@ -497,7 +497,7 @@ export default {
                     .has(PermissionFlagsBits.SendMessages)
             ) {
                 return interaction.editReply({
-                    content: `${emojis.important} I don't have permission to send messages in ${sendingChannel}!`,
+                    content: `${emojis.danger} I don't have permission to send messages in ${sendingChannel}!`,
                 });
             }
 
@@ -547,7 +547,7 @@ export default {
             )
                 return interaction.followUp({
                     content: `## ${
-                        emojis.important + " " + underline("Recommending")
+                        emojis.danger + " " + underline("Recommending")
                     }\nIf Kaeru has ${bold(
                         "Manage Messages"
                     )} permission, it will be very easy to reach at first message with pinned messages for staff members.`,
@@ -567,7 +567,7 @@ export default {
                     .has(PermissionFlagsBits.SendMessages)
             ) {
                 return interaction.editReply({
-                    content: `${emojis.important} I don't have permission to send messages in ${loggingChannel}!`,
+                    content: `${emojis.danger} I don't have permission to send messages in ${loggingChannel}!`,
                 });
             }
 

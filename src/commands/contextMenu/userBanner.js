@@ -53,7 +53,7 @@ export default {
                 const imageURI = resolved.bannerURL({ size: 4096 });
                 if (imageURI === null) {
                     await interaction.editReply({
-                        content: `${emojis.important} Hmm, looks like this user doesn’t have a banner set. Maybe it’s lost in the folds of time?`,
+                        content: `${emojis.danger} Hmm, looks like this user doesn’t have a banner set. Maybe it’s lost in the folds of time?`,
                     });
                 } else {
                     const embed = new EmbedBuilder()
@@ -70,7 +70,7 @@ export default {
         } catch (error) {
             console.error(error);
             return interaction.editReply({
-                content: `${emojis.danger} Oops! Something went wrong. Maybe a glitch in the timeline?`,
+                content: `${emojis.error} Oops! Something went wrong. Maybe a glitch in the timeline?`,
             });
         }
     },
