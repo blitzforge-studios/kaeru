@@ -10,7 +10,8 @@ export const basePermissions = [
     },
     {
         permission: PermissionFlagsBits.EmbedLinks,
-        errorMessage: "Please notify the staff that Kaeru can't embed links.",
+        errorMessage:
+            "Please notify the staff that Kaeru can't create embed links.",
     },
     {
         permission: PermissionFlagsBits.AttachFiles,
