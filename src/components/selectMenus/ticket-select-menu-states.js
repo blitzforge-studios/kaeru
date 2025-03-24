@@ -80,7 +80,7 @@ export default {
                 });
 
                 await interaction.reply({
-                    content: `# ${emojis.reactions.reaction_thumbsup}\nClosed as completed.`,
+                    content: `# ${emojis.reactions.reaction_thumbsup}`,
                     flags: MessageFlags.Ephemeral,
                 });
 
