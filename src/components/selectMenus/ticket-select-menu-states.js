@@ -6,6 +6,7 @@ import {
     TextInputBuilder,
     TextInputStyle,
     time,
+    MessageFlags,
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 import { defaultLockTicketPermissions } from "../../resources/BotPermissions.js";
@@ -33,7 +34,6 @@ const menu3 = new StringSelectMenuBuilder()
         new StringSelectMenuOptionBuilder()
             .setLabel("Close with comment")
             .setValue("ticket-menu-close")
-            .setDescription("Close with a comment")
             .setEmoji(emojis.ticketClose)
             .setDefault(false)
     );
@@ -79,6 +79,11 @@ export default {
                     content: `${emojis.ticketDone} **${interaction.user.username}** __closed__ this as completed ${formattedTime}`,
                 });
 
+                await interaction.reply({
+                    content: `# ${emojis.reactions.reaction_thumbsup}`,
+                    flags: MessageFlags.Ephemeral,
+                });
+
                 await interaction.channel.setLocked(true);
                 await interaction.channel.setArchived(
                     true,
@@ -108,7 +113,6 @@ export default {
                         new StringSelectMenuOptionBuilder()
                             .setLabel("Close with comment")
                             .setValue("ticket-menu-close")
-                            .setDescription("Close with a comment")
                             .setEmoji(emojis.ticketClose)
                     );
 

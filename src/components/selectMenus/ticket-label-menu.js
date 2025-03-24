@@ -1,5 +1,5 @@
 import { MessageFlags } from "discord.js";
-import { labelMenuRow } from "../../resources/selectMenus.js";
+import { emojis } from "../../resources/emojis.js";
 
 export default {
     data: {
@@ -31,25 +31,35 @@ export default {
         try {
             await interaction.channel.setName(newTitle);
 
-            const secondMenu = interaction.message.components[1];
+            const components = interaction.message.components;
+
+            const selectedOptionEmoji =
+                components[1].components[0].options.find(
+                    (option) => option.value === labelValue
+                )?.emoji || emojis.label.bugLabel;
+
+            const selectedOption = {
+                label: labelText,
+                value: labelValue,
+                emoji: selectedOptionEmoji,
+                default: true,
+            };
 
             const updatedSecondMenu = {
                 type: 1,
                 components: [
                     {
-                        type: secondMenu.components[0].type,
-                        custom_id: secondMenu.components[0].customId,
+                        type: components[1].components[0].type,
+                        custom_id: components[1].components[0].customId,
                         disabled: true,
-                        options: secondMenu.components[0].options,
-                        placeholder: secondMenu.components[0].placeholder,
+                        options: [selectedOption],
+                        placeholder: `${selectedOptionEmoji} ${labelText}`,
                     },
                 ],
             };
 
-            // Bileşenleri birleştir
-            const updatedComponents = [firstMenu.toJSON(), updatedSecondMenu];
+            const updatedComponents = [components[0], updatedSecondMenu];
 
-            // Mesajı güncelle
             await interaction.message.edit({ components: updatedComponents });
 
             await interaction.reply({

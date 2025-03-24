@@ -25,7 +25,6 @@ let ticketMenu = new StringSelectMenuBuilder()
         new StringSelectMenuOptionBuilder()
             .setLabel("Close with comment")
             .setValue("ticket-menu-close")
-            .setDescription("Close with a comment")
             .setEmoji(emojis.ticketClose)
     );
 
