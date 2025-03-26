@@ -21,7 +21,7 @@ export default {
             .setStyle(TextInputStyle.Short)
             .setPlaceholder("Cannot post memes")
             .setMinLength(5)
-            .setMaxLength(100);
+            .setMaxLength(80);
         const firstActionRow = new ActionRowBuilder().addComponents(input);
 
         modal.addComponents(firstActionRow);
