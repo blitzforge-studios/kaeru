@@ -1,5 +1,6 @@
 import { MessageFlags } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
+import { lockButtonRow } from "../../resources/buttons.js";
 
 export default {
     data: {
@@ -58,7 +59,11 @@ export default {
                 ],
             };
 
-            const updatedComponents = [components[0], updatedSecondMenu];
+            const updatedComponents = [
+                components[0],
+                updatedSecondMenu,
+                lockButtonRow,
+            ];
 
             await interaction.message.edit({ components: updatedComponents });
 
