@@ -494,10 +494,13 @@ export default {
             if (
                 !sendingChannel
                     .permissionsFor(interaction.guild.members.me)
-                    .has(PermissionFlagsBits.SendMessages)
+                    .has([
+                        PermissionFlagsBits.ViewChannel,
+                        PermissionFlagsBits.SendMessages,
+                    ])
             ) {
                 return interaction.editReply({
-                    content: `${emojis.danger} I don't have permission to send messages in ${sendingChannel}!`,
+                    content: `${emojis.danger} I don't have send messages or view channel permissions in ${sendingChannel} to sending creating ticket permission!`,
                 });
             }
 
