@@ -270,7 +270,7 @@ export default {
                 })
                 .setRequired(false)
         ),
-    execute: async ({ interaction }) => {
+    execute: async ({ client, interaction }) => {
         const botHasPermission = await checkBotPermissions(
             interaction,
             basePermissions
