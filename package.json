@@ -30,7 +30,7 @@
         "chalk": "^5.4.1",
         "discord.js": "^14.17.3",
         "dotenv": "^16.4.7",
-        "express": "^4.21.2",
+        "express": "^5.1.0",
         "fs": "^0.0.1-security",
         "moment-timezone": "^0.5.43",
         "mongoose": "^8.10.1",
