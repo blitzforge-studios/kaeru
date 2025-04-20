@@ -58,12 +58,7 @@ export default {
             );
 
             await interaction.editReply({
-                content: `# ${emojis.translate} Translation\n-# ————————————————————\n### ${emojis.globe} Original Message\n${message.content}\n\n### ${emojis.swap} Translated Message (${locale})\n${translated.text}\n\n-# I sent it on below if you need to copy the message.`,
-            });
-
-            return interaction.followUp({
-                content: `${translated.text}`,
-                flags: MessageFlags.Ephemeral,
+                content: `### ${emojis.swap} Translated Message (${locale})\n${translated.text}`,
             });
         } catch (error) {
             console.log(error);
