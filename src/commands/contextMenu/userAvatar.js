@@ -1,10 +1,13 @@
 import {
     ApplicationCommandType,
     ApplicationIntegrationType,
-    EmbedBuilder,
     ContextMenuCommandBuilder,
     InteractionContextType,
     MessageFlags,
+    ContainerBuilder,
+    TextDisplayBuilder,
+    MediaGalleryItemBuilder,
+    MediaGalleryBuilder,
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 import { basePermissions } from "../../resources/BotPermissions.js";
@@ -50,19 +53,33 @@ export default {
         try {
             const userId = interaction.targetId;
             const user = await client.users.fetch(userId);
-            const avatar = user.displayAvatarURL({
+            const userAvatar = user.displayAvatarURL({
                 size: 4096,
             });
 
-            const embed = new EmbedBuilder()
-                .setDescription(
-                    `# ${emojis.avatar} Hey there!\nYou're checking out @${user.username}'s profile picture. Pretty cool, right?`
-                )
-                .setImage(avatar)
-                .setColor(process.env.EMBED_COLOR);
+            const text1 = new TextDisplayBuilder().setContent(
+                [
+                    `# ${emojis.avatar} Hey there!`,
+                    `You're checking out @${user.username}'s profile picture.`,
+                ].join("\n")
+            );
+            const text2 = new TextDisplayBuilder().setContent(
+                "-# I like it! 🤌🏻"
+            );
+
+            const mediaGallery = new MediaGalleryBuilder().addItems(
+                new MediaGalleryItemBuilder().setURL(userAvatar)
+            );
+
+            const container = new ContainerBuilder()
+                .setAccentColor(0xa2845e)
+                .addTextDisplayComponents(text1)
+                .addMediaGalleryComponents(mediaGallery)
+                .addTextDisplayComponents(text2);
 
             await interaction.editReply({
-                embeds: [embed],
+                components: [container],
+                flags: MessageFlags.IsComponentsV2,
             });
         } catch (error) {
             console.error("Error fetching user or avatar:", error);

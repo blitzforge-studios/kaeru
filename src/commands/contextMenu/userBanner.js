@@ -1,10 +1,13 @@
 import {
     ContextMenuCommandBuilder,
     ApplicationCommandType,
-    EmbedBuilder,
     ApplicationIntegrationType,
     InteractionContextType,
     MessageFlags,
+    ContainerBuilder,
+    TextDisplayBuilder,
+    MediaGalleryBuilder,
+    MediaGalleryItemBuilder,
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 import { basePermissions } from "../../resources/BotPermissions.js";
@@ -36,6 +39,7 @@ export default {
             if (!(await checkBotPermissions(interaction, basePermissions)))
                 return;
         }
+
         try {
             if (
                 Object.keys(interaction.authorizingIntegrationOwners).every(
@@ -46,24 +50,38 @@ export default {
             } else {
                 await interaction.deferReply();
             }
+
             const user = client.users.fetch(interaction.targetId, {
                 force: true,
             });
+
             user.then(async (resolved) => {
                 const imageURI = resolved.bannerURL({ size: 4096 });
+
                 if (imageURI === null) {
                     await interaction.editReply({
                         content: `${emojis.danger} Hmm, looks like this user doesn’t have a banner set. Maybe it’s lost in the folds of time?`,
                     });
                 } else {
-                    const embed = new EmbedBuilder()
-                        .setDescription(
-                            `# ${emojis.banner} Hey there!\nYou're checking out @${resolved.username}'s banner. Pretty neat, right?`
+                    const container = new ContainerBuilder()
+                        .setAccentColor(0xa2845e)
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(
+                                [
+                                    `# ${emojis.banner} Hey there!`,
+                                    `You're checking out @${resolved.username}'s banner. Pretty neat, right?`,
+                                ].join("\n")
+                            )
                         )
-                        .setImage(imageURI)
-                        .setColor(process.env.EMBED_COLOR);
+                        .addMediaGalleryComponents(
+                            new MediaGalleryBuilder().addItems(
+                                new MediaGalleryItemBuilder().setURL(imageURI)
+                            )
+                        );
+
                     await interaction.editReply({
-                        embeds: [embed],
+                        components: [container],
+                        flags: MessageFlags.IsComponentsV2,
                     });
                 }
             });

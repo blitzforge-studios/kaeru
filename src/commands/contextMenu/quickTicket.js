@@ -52,13 +52,12 @@ export default {
         });
 
         await thread.send({
-            content: `## ${emojis.ticket} <@${interaction.user.id}>, you have opened a quick-support for this message\n> ${message.content}\n> -# Jump to [message](${message.url})\n> -# ———————————————\n- Message sent by __@${message.author.username}__`,
+            content: `## ${emojis.ticket} <@${interaction.user.id}>, you have opened a quick-action for this message\n> ${message.content}\n> -# Jump to [message](${message.url})\n> -# ———————————————\n- Message sent by __@${message.author.username}__`,
             components: [ticketMenuRow, lockButtonRow],
-            flags: MessageFlags.HasThread,
         });
 
         await interaction.editReply({
-            content: `# ${emojis.ticketCreated} Created <#${thread.id}>\nNow, you can talk about your issue with our staff members.`,
+            content: `# ${emojis.ticketCreated} Created <#${thread.id}>\nNow, you can talk about your issue with our staff members or server members.`,
         });
     },
 };
