@@ -5,10 +5,6 @@ import {
     InteractionContextType,
     ChannelType,
     MessageFlags,
-    ContainerBuilder,
-    TextDisplayBuilder,
-    SeparatorBuilder,
-    SeparatorSpacingSize,
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 import { defaultTicketPermissions } from "../../resources/BotPermissions.js";
@@ -51,41 +47,17 @@ export default {
             name: `— Quick-ticket by ${interaction.user.username}`,
             autoArchiveDuration: 60,
             type: ChannelType.PrivateThread,
-            reason: `${interaction.user.username} opened a thread for quick-action`,
+            reason: `${interaction.user.username} opened a thread for support`,
             invitable: true,
         });
 
-        const container = new ContainerBuilder()
-            .addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(
-                    [
-                        `## ${emojis.ticket} <@${interaction.user.id}>, you have opened a quick-action for this message`,
-                        "-# Please mention the member(s) you want them be discussing this message with you.",
-                    ].join("\n")
-                )
-            )
-            .addSeparatorComponents(
-                new SeparatorBuilder()
-                    .setDivider(true)
-                    .setSpacing(SeparatorSpacingSize.Small)
-            )
-            .addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(
-                    [
-                        `> ${message.content}`,
-                        `> -# Jump to [message](${message.url})`,
-                        `-# Message sent by __@${message.author.username}__`,
-                    ].join("\n")
-                )
-            );
-
         await thread.send({
-            components: [container, ticketMenuRow, lockButtonRow],
-            flags: MessageFlags.IsComponentsV2,
+            content: `## ${emojis.ticket} <@${interaction.user.id}>, you have opened a quick-action for this message\n> ${message.content}\n> -# Jump to [message](${message.url})\n> -# ———————————————\n- Message sent by __@${message.author.username}__`,
+            components: [ticketMenuRow, lockButtonRow],
         });
 
         await interaction.editReply({
-            content: `# ${emojis.ticketCreated} Created <#${thread.id}>\nNow, you can talk about your issue with our staff members or other members.`,
+            content: `# ${emojis.ticketCreated} Created <#${thread.id}>\nNow, you can talk about your issue with our staff members or server members.`,
         });
     },
 };
