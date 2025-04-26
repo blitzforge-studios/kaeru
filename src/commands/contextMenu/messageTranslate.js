@@ -5,6 +5,12 @@ import {
     InteractionContextType,
     MessageFlags,
     AllowedMentionsTypes,
+    ContainerBuilder,
+    TextDisplayBuilder,
+    SeparatorBuilder,
+    SeparatorSpacingSize,
+    ThumbnailBuilder,
+    SectionBuilder,
 } from "discord.js";
 import translate from "@iamtraction/google-translate";
 import { emojis } from "../../resources/emojis.js";
@@ -52,13 +58,39 @@ export default {
                 ? new Intl.Locale(interaction.locale).language
                 : interaction.locale;
 
+            if (locale === "en") {
+                return interaction.editReply({
+                    content: `${emojis.info} This message is already in English, so there’s no need to translate it. It’s like déjà vu, but in words.`,
+                });
+            }
+
             const translated = await translate(
-                message.content.replace(/<a?:.+?:\d{18}>/g, ""), // Discord emojilerini temizle
+                message.content.replace(/<a?:.+?:\d{18}>/g, ""),
                 { to: locale }
             );
 
+            const sectionOriginal = new TextDisplayBuilder().setContent(
+                [`### ${emojis.globe} Original Message`, message.content].join(
+                    "\n"
+                )
+            );
+
+            const separator = new SeparatorBuilder()
+                .setSpacing(SeparatorSpacingSize.Large)
+                .setDivider(true);
+
+            const sectionTranslated = new TextDisplayBuilder().setContent(
+                [`### ${emojis.swap} Translated Message`, translated.text].join(
+                    "\n"
+                )
+            );
+
             await interaction.editReply({
-                content: `### ${emojis.swap} Translated Message (${locale})\n${translated.text}`,
+                components: [sectionOriginal, separator, sectionTranslated],
+                allowedMentions: {
+                    parse: [],
+                },
+                flags: MessageFlags.IsComponentsV2,
             });
         } catch (error) {
             console.log(error);
