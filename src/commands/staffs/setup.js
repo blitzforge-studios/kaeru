@@ -11,6 +11,12 @@ import {
     MessageFlags,
     ApplicationIntegrationType,
     InteractionContextType,
+    ContainerBuilder,
+    TextDisplayBuilder,
+    MediaGalleryBuilder,
+    MediaGalleryItemBuilder,
+    SeparatorBuilder,
+    SeparatorSpacingSize,
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 import { basePermissions } from "../../resources/BotPermissions.js";
@@ -122,319 +128,6 @@ export default {
                         })
                         .setRequired(false)
                 )
-                .addStringOption((option) =>
-                    option
-                        .setName("color")
-                        .setNameLocalizations({
-                            "zh-CN": "颜色",
-                            it: "colore",
-                            tr: "renk",
-                        })
-                        .setDescription("🔴🟠🟡🟢🔵🟣⚫️⚪️")
-                        .setRequired(false)
-                        .addChoices(
-                            {
-                                name: "Lilac",
-                                value: "#D9B2FF",
-                                name_localizations: {
-                                    "zh-CN": "丁香色",
-                                    it: "Lilla",
-                                    tr: "Lila",
-                                    "pt-BR": "Lilás",
-                                    ro: "Liliac",
-                                    el: "Λιλά",
-                                },
-                            },
-                            {
-                                name: "Powder Blue",
-                                value: "#BFEFFF",
-                                name_localizations: {
-                                    "zh-CN": "粉蓝色",
-                                    it: "Celeste in polvere",
-                                    tr: "Toz Mavisi",
-                                    "pt-BR": "Azul-pó",
-                                    ro: "Albastru Pulbere",
-                                    el: "Σκόνη Μπλε",
-                                },
-                            },
-                            {
-                                name: "Mauve",
-                                value: "#FFB6C1",
-                                name_localizations: {
-                                    "zh-CN": "粉紫色",
-                                    it: "Malva",
-                                    tr: "Eflatun",
-                                    "pt-BR": "Malva",
-                                    ro: "Mov",
-                                    el: "Μαύρο",
-                                },
-                            },
-                            {
-                                name: "Pale Green",
-                                value: "#C8FFB0",
-                                name_localizations: {
-                                    "zh-CN": "苍白绿色",
-                                    it: "Verde pallido",
-                                    tr: "Soluk Yeşil",
-                                    "pt-BR": "Verde Pálido",
-                                    ro: "Verde Pal",
-                                    el: "Ανοιχτό Πράσινο",
-                                },
-                            },
-                            {
-                                name: "Ivory",
-                                value: "#FFFFF0",
-                                name_localizations: {
-                                    "zh-CN": "象牙白",
-                                    it: "Avorio",
-                                    tr: "Fildişi",
-                                    "pt-BR": "Marfim",
-                                    ro: "Ivoriu",
-                                    el: "Κρεμ",
-                                },
-                            },
-                            {
-                                name: "Slate",
-                                value: "#B0C4DE",
-                                name_localizations: {
-                                    "zh-CN": "青石色",
-                                    it: "Ardesia",
-                                    tr: "Arduvaz",
-                                    "pt-BR": "Pardacento",
-                                    ro: "Ardezie",
-                                    el: "Σχιστόλιθος",
-                                },
-                            },
-                            {
-                                name: "Mint",
-                                value: "#BDFCC9",
-                                name_localizations: {
-                                    "zh-CN": "薄荷绿色",
-                                    it: "Menta",
-                                    tr: "Nane",
-                                    "pt-BR": "Hortelã",
-                                    ro: "Mentă",
-                                    el: "Δροσιά",
-                                },
-                            },
-                            {
-                                name: "Lavender Gray",
-                                value: "#C4C3D0",
-                                name_localizations: {
-                                    "zh-CN": "薰衣草灰色",
-                                    it: "Lavanda grigio",
-                                    tr: "Beyaz Lavanta",
-                                    "pt-BR": "Lavanda Cinza",
-                                    ro: "Levănțică Gri",
-                                    el: "Γκρίζος λεβάντα",
-                                },
-                            },
-                            {
-                                name: "Pink",
-                                value: "#FFC0CB",
-                                name_localizations: {
-                                    "zh-CN": "粉红色",
-                                    it: "Rosa",
-                                    tr: "Pembe",
-                                    "pt-BR": "Rosa",
-                                    ro: "Roz",
-                                    el: "Ροζ",
-                                },
-                            },
-                            {
-                                name: "Silver",
-                                value: "#C0C0C0",
-                                name_localizations: {
-                                    "zh-CN": "银色",
-                                    it: "Argento",
-                                    tr: "Gümüş",
-                                    "pt-BR": "Prata",
-                                    ro: "Argint",
-                                    el: "Ασημί",
-                                },
-                            },
-                            {
-                                name: "Peach",
-                                value: "#FFE5B4",
-                                name_localizations: {
-                                    "zh-CN": "桃色",
-                                    it: "Pesca",
-                                    tr: "Şeftali",
-                                    "pt-BR": "Pêssego",
-                                    ro: "Piersic",
-                                    el: "Ροδάκινο",
-                                },
-                            },
-                            {
-                                name: "Pale Yellow",
-                                value: "#FFFFB2",
-                                name_localizations: {
-                                    "zh-CN": "苍白黄色",
-                                    it: "Giallo pallido",
-                                    tr: "Soluk Sarı",
-                                    "pt-BR": "Amarelo Pálido",
-                                    ro: "Galben Pal",
-                                    el: "Ανοιχτό Κίτρινο",
-                                },
-                            },
-                            {
-                                name: "Light Gray",
-                                value: "#D3D3D3",
-                                name_localizations: {
-                                    "zh-CN": "浅灰色",
-                                    it: "Grigio chiaro",
-                                    tr: "Açık Gri",
-                                    "pt-BR": "Cinza Claro",
-                                    ro: "Gri deschis",
-                                    el: "Ανοιχτό Γκρίζο",
-                                },
-                            },
-                            {
-                                name: "Lavender",
-                                value: "#E6E6FA",
-                                name_localizations: {
-                                    "zh-CN": "薰衣草色",
-                                    it: "Lavanda",
-                                    tr: "Beyaz Lavanta",
-                                    "pt-BR": "Lavanda",
-                                    ro: "Levănțică",
-                                    el: "Λεβάντα",
-                                },
-                            },
-                            {
-                                name: "Sky Blue",
-                                value: "#87CEEB",
-                                name_localizations: {
-                                    "zh-CN": "天蓝色",
-                                    it: "Azzurro cielo",
-                                    tr: "Gökyüzü Mavisi",
-                                    "pt-BR": "Azul-celeste",
-                                    ro: "Albastru cer",
-                                    el: "Ουρανίσιο Μπλε",
-                                },
-                            },
-                            {
-                                name: "Beige",
-                                value: "#F5F5DC",
-                                name_localizations: {
-                                    "zh-CN": "米色",
-                                    it: "Beige",
-                                    tr: "Bej",
-                                    "pt-BR": "Bege",
-                                    ro: "Bej",
-                                    el: "Μπεζ",
-                                },
-                            },
-                            {
-                                name: "Salmon",
-                                value: "#FFA07A",
-                                name_localizations: {
-                                    "zh-CN": "鲑鱼色",
-                                    it: "Salmone",
-                                    tr: "Somon",
-                                    "pt-BR": "Salmão",
-                                    ro: "Somon",
-                                    el: "Σολομός",
-                                },
-                            },
-                            {
-                                name: "Platinum",
-                                value: "#E5E4E2",
-                                name_localizations: {
-                                    "zh-CN": "铂金色",
-                                    it: "Platino",
-                                    tr: "Platin",
-                                    "pt-BR": "Platina",
-                                    ro: "Platină",
-                                    el: "Πλατίνα",
-                                },
-                            },
-                            {
-                                name: "Misty Rose",
-                                value: "#FFE4E1",
-                                name_localizations: {
-                                    "zh-CN": "粉玫瑰色",
-                                    it: "Rosa nebbia",
-                                    tr: "Dumanlı Gül",
-                                    "pt-BR": "Rosa Orvalhado",
-                                    ro: "Roz cețos",
-                                    el: "Ροζ ομίχλης",
-                                },
-                            },
-                            {
-                                name: "Light Cyan",
-                                value: "#E0FFFF",
-                                name_localizations: {
-                                    "zh-CN": "淡青色",
-                                    it: "Ciano chiaro",
-                                    tr: "Açık Mavi",
-                                    "pt-BR": "Ciano Claro",
-                                    ro: "Cyan Deschis",
-                                    el: "Ανοιχτό Κυανό",
-                                },
-                            },
-                            {
-                                name: "Light Pink",
-                                value: "#FFB6C1",
-                                name_localizations: {
-                                    "zh-CN": "浅粉色",
-                                    it: "Rosa chiaro",
-                                    tr: "Açık Pembe",
-                                    "pt-BR": "Rosa Claro",
-                                    ro: "Roz deschis",
-                                    el: "Ανοιχτό Ροζ",
-                                },
-                            },
-                            {
-                                name: "Pale Turquoise",
-                                value: "#AFEEEE",
-                                name_localizations: {
-                                    "zh-CN": "苍白蓝绿色",
-                                    it: "Turchese pallido",
-                                    tr: "Soluk Turkuaz",
-                                    "pt-BR": "Turquesa Pálida",
-                                    ro: "Turcoaz Pal",
-                                    el: "Ανοιχτό Τυρκουάζ",
-                                },
-                            },
-                            {
-                                name: "Light Salmon",
-                                value: "#FFA07A",
-                                name_localizations: {
-                                    "zh-CN": "浅鲑鱼色",
-                                    it: "Salmone chiaro",
-                                    tr: "Açık Somon",
-                                    "pt-BR": "Salmão Claro",
-                                    ro: "Somon deschis",
-                                    el: "Ανοιχτό Σολομός",
-                                },
-                            },
-                            {
-                                name: "Black",
-                                value: "#000000",
-                                name_localizations: {
-                                    "zh-CN": "黑色",
-                                    it: "Nero",
-                                    tr: "Siyah",
-                                    "pt-BR": "Preto",
-                                    ro: "Negru",
-                                    el: "Μαύρο",
-                                },
-                            },
-                            {
-                                name: "White",
-                                value: "#FFFFFF",
-                                name_localizations: {
-                                    "zh-CN": "白色",
-                                    it: "Bianco",
-                                    tr: "Beyaz",
-                                    "pt-BR": "Branco",
-                                    ro: "Alb",
-                                    el: "Λευκό",
-                                },
-                            }
-                        )
-                )
         )
         .addSubcommand((subcommand) =>
             subcommand
@@ -504,22 +197,32 @@ export default {
                 });
             }
 
-            const embed = new EmbedBuilder()
-                .setDescription(
-                    embedDescription
-                        ? embedDescription
-                        : `# ${emojis.button} Create a Ticket\nIf you're experiencing an issue with our product or service, please use the "Create ticket" button to report it. This includes any server-related tickets you may be encountering in our Discord server.`
+            const container = new ContainerBuilder()
+                .setAccentColor(0xa2845e)
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        embedDescription ||
+                            [
+                                `# ${emojis.button} Create a Ticket`,
+                                `If you're experiencing an issue with our product or service, please use the "Create ticket" button to report it.`,
+                                `-# This includes any server-related tickets you may be encountering in our Discord server.`,
+                            ].join("\n")
+                    )
                 )
-                .setColor(embedColor ? embedColor : process.env.EMBED_COLOR)
-                .setImage(
-                    banner
-                        ? banner.url
-                        : "https://media.discordapp.net/attachments/736571695170584576/1339321371502837780/Image.png?ex=67ae4bba&is=67acfa3a&hm=57b7c1901d5a6c0d3629d01fbc790d9f01f828f2b35984c3fb6ecb68c10d54a0&=&width=1956&height=886"
+                .addSeparatorComponents(
+                    new SeparatorBuilder()
+                        .setSpacing(SeparatorSpacingSize.Large)
+                        .setDivider(true)
                 )
-                .setFooter({
-                    text: interaction.guild.name,
-                    iconURL: interaction.guild.iconURL(),
-                });
+                .addMediaGalleryComponents(
+                    new MediaGalleryBuilder().addItems(
+                        new MediaGalleryItemBuilder().setURL(
+                            banner
+                                ? banner.url
+                                : "https://media.discordapp.net/attachments/736571695170584576/1339321371502837780/Image.png?ex=67ae4bba&is=67acfa3a&hm=57b7c1901d5a6c0d3629d01fbc790d9f01f828f2b35984c3fb6ecb68c10d54a0&=&width=1956&height=886"
+                        )
+                    )
+                );
 
             const createticketButton = new ButtonBuilder()
                 .setCustomId(`create-ticket`)
@@ -539,8 +242,8 @@ export default {
             await saveStaffRoleId(guild.id, staffRole);
 
             await sendingChannel.send({
-                embeds: [embed],
-                components: [row],
+                components: [container, row],
+                flags: MessageFlags.IsComponentsV2,
             });
 
             if (
