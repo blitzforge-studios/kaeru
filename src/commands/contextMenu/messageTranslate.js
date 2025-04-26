@@ -4,13 +4,9 @@ import {
     ApplicationIntegrationType,
     InteractionContextType,
     MessageFlags,
-    AllowedMentionsTypes,
-    ContainerBuilder,
     TextDisplayBuilder,
     SeparatorBuilder,
     SeparatorSpacingSize,
-    ThumbnailBuilder,
-    SectionBuilder,
 } from "discord.js";
 import translate from "@iamtraction/google-translate";
 import { emojis } from "../../resources/emojis.js";
