@@ -54,12 +54,6 @@ export default {
                 ? new Intl.Locale(interaction.locale).language
                 : interaction.locale;
 
-            if (locale === "en") {
-                return interaction.editReply({
-                    content: `${emojis.info} This message is already in English, so there’s no need to translate it. It’s like déjà vu, but in words.`,
-                });
-            }
-
             const translated = await translate(
                 message.content.replace(/<a?:.+?:\d{18}>/g, ""),
                 { to: locale }
