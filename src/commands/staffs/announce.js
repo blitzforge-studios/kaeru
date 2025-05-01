@@ -228,6 +228,8 @@ export default {
             flags: MessageFlags.IsComponentsV2,
         });
 
+        await sentMessage.crosspost();
+
         await sentMessage.react(emojis.reactions.reaction_heart_u);
         await sentMessage.react(emojis.reactions.reaction_thumbsup_u);
         await sentMessage.react(emojis.reactions.reaction_thumbsdown_u);
