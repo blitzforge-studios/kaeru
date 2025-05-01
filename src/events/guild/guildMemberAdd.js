@@ -10,7 +10,7 @@ export default {
         const accountAge = new Date() - member.user.createdTimestamp;
         const oneDayInMillis = 1000 * 60 * 60 * 24;
         const sevenDaysInMillis = oneDayInMillis * 7;
-        const channelId = await checkLoggingChannel(guild.id);
+        const channelId = (await checkLoggingChannel(guild.id)) || null;
         const channel =
             guild.channels.cache.get(channelId) || "961144092782374942";
 
@@ -51,6 +51,11 @@ export default {
                     const logginChannel = await guild.channels.fetch(channelId);
 
                     await logginChannel.send({ embeds: [embed] });
+                } else {
+                    console.log(
+                        "Logging channel not found. Skipping logging in " +
+                            guild.name
+                    );
                 }
             } catch (error) {
                 console.error("Failed to send message to channel:", error);

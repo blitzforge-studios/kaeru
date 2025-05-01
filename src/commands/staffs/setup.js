@@ -2,7 +2,6 @@ import {
     SlashCommandBuilder,
     ButtonBuilder,
     ActionRowBuilder,
-    EmbedBuilder,
     ButtonStyle,
     ChannelType,
     PermissionFlagsBits,
