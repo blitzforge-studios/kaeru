@@ -49,9 +49,24 @@ export const defaultLockTicketPermissions = [
 export const defaultAnnounceMessagePermissions = [
     ...basePermissions,
     {
+        permission: PermissionFlagsBits.MentionEveryone,
+        errorMessage:
+            "Kaeru can't mention everyone and roles, so Kaeru can't really announce it for you... Also before deleting this message, copy your text on the slash command, so you don't have to rewrite it :3",
+    },
+    {
         permission: PermissionFlagsBits.ManageWebhooks,
         errorMessage:
-            "Kaeru can't create webhooks to mention everyone and roles along with container message, so Kaeru can't really announce it for you... Also before deleting this message, copy your text on the slash command, so you don't have to rewrite it :3",
+            "Kaeru can't create webhooks for that channel, so Kaeru can't really announce it for you... Also before deleting this message, copy your text on the slash command, so you don't have to rewrite it :3",
+    },
+    {
+        permission: PermissionFlagsBits.CreatePublicThreads,
+        errorMessage:
+            "Kaeru can't create threads for that channel, so Kaeru can't really announce it for you... Also before deleting this message, copy your text on the slash command, so you don't have to rewrite it :3",
+    },
+    {
+        permission: PermissionFlagsBits.AddReactions,
+        errorMessage:
+            "Kaeru can't add reactions for that channel, make it avaliable so Kaeru can add reactions for you to make your announcement look good. Also before deleting this message, copy your text on the slash command, so you don't have to rewrite it :3",
     },
 ];
 

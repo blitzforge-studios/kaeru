@@ -84,6 +84,7 @@ export default {
                     tr: "Duyurunun başlığı",
                 })
                 .setRequired(false)
+                .setMaxLength(100)
         )
         .addStringOption((option) =>
             option
@@ -150,6 +151,8 @@ export default {
                 .setRequired(false)
         ),
     execute: async ({ interaction }) => {
+        const channel = interaction.options.getChannel("channel");
+
         const botHasPermission = await checkBotPermissions(
             interaction,
             defaultAnnounceMessagePermissions
@@ -157,8 +160,6 @@ export default {
         if (!botHasPermission) return;
 
         await interaction.deferReply();
-
-        const channel = interaction.options.getChannel("channel");
         const image = interaction.options.getAttachment("image");
         const role = interaction.options.getRole("role");
         const title = interaction.options.getString("title") || "Announcement";
@@ -218,33 +219,53 @@ export default {
             );
         }
 
-        const webhook = await channel.createWebhook({
-            name: interaction.guild.name,
-            avatar: interaction.guild.iconURL(),
-        });
+        try {
+            const webhook = await channel.createWebhook({
+                name: interaction.guild.name,
+                avatar: interaction.guild.iconURL(),
+            });
 
-        const sentMessage = await webhook.send({
-            components: [container],
-            flags: MessageFlags.IsComponentsV2,
-        });
+            try {
+                const sentMessage = await webhook.send({
+                    components: [container],
+                    flags: MessageFlags.IsComponentsV2,
+                });
 
-        await sentMessage.crosspost();
+                await sentMessage.startThread({
+                    name: title,
+                    autoArchiveDuration: 60,
+                    reason: `${interaction.user.username} created a thread for announcement`,
+                });
 
-        await sentMessage.react(emojis.reactions.reaction_heart_u);
-        await sentMessage.react(emojis.reactions.reaction_thumbsup_u);
-        await sentMessage.react(emojis.reactions.reaction_thumbsdown_u);
-        await sentMessage.react(emojis.reactions.reaction_haha_u);
-        await sentMessage.react(emojis.reactions.reaction_emphasize_u);
-        await sentMessage.react(emojis.reactions.reaction_question_u);
+                await sentMessage.crosspost();
 
-        await webhook.delete();
+                await sentMessage.react(emojis.reactions.reaction_heart_u);
+                await sentMessage.react(emojis.reactions.reaction_thumbsup_u);
+                await sentMessage.react(emojis.reactions.reaction_thumbsdown_u);
+                await sentMessage.react(emojis.reactions.reaction_haha_u);
+                await sentMessage.react(emojis.reactions.reaction_emphasize_u);
+                await sentMessage.react(emojis.reactions.reaction_question_u);
 
-        await interaction.editReply({
-            content: italic(
-                `${
-                    interaction.user.username
-                } announced something in ${channelMention(channel.id)}.`
-            ),
-        });
+                await interaction.editReply({
+                    content: italic(
+                        `${
+                            interaction.user.username
+                        } announced something in ${channelMention(channel.id)}.`
+                    ),
+                });
+            } catch (error) {
+                console.error("Error sending announcement:", error);
+                await interaction.editReply({
+                    content: `${emojis.error} There was an error sending the announcement: ${error.message}`,
+                });
+            } finally {
+                await webhook.delete().catch(console.error);
+            }
+        } catch (error) {
+            console.error("Error creating webhook:", error);
+            await interaction.editReply({
+                content: `${emojis.error} There was an error creating the webhook: ${error.message}`,
+            });
+        }
     },
 };
