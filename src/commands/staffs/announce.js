@@ -1,0 +1,158 @@
+import {
+    ApplicationIntegrationType,
+    channelMention,
+    ChannelType,
+    ContainerBuilder,
+    InteractionContextType,
+    italic,
+    MediaGalleryBuilder,
+    MediaGalleryItemBuilder,
+    MessageFlags,
+    PermissionFlagsBits,
+    SeparatorBuilder,
+    SeparatorSpacingSize,
+    SlashCommandBuilder,
+    TextDisplayBuilder,
+} from "discord.js";
+import { checkBotPermissions } from "../../functions/checkPermissions.js";
+import { defaultAnnounceMessagePermissions } from "../../resources/BotPermissions.js";
+
+export default {
+    data: new SlashCommandBuilder()
+        .setDefaultMemberPermissions(PermissionFlagsBits.MentionEveryone)
+        .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+        .setContexts([InteractionContextType.Guild])
+        .setName("announce")
+        .setDescription("Announce something to the server!")
+        .setNameLocalizations({
+            "zh-CN": "宣布",
+            it: "annuncia",
+            tr: "duyur",
+        })
+        .setDescriptionLocalizations({
+            "zh-CN": "向服务器宣布一些事情！",
+            it: "Annuncia qualcosa al server!",
+            tr: "Sunucuya bir şey duyur!",
+        })
+        .addChannelOption((option) =>
+            option
+                .setName("channel")
+                .setNameLocalizations({
+                    "zh-CN": "渠道",
+                    it: "canale",
+                    tr: "kanal",
+                })
+                .setDescription("Channel to be sent")
+                .setDescriptionLocalizations({
+                    "zh-CN": "要发送的频道",
+                    it: "Canale da inviare",
+                    tr: "Gönderilecek kanal",
+                })
+                .setRequired(true)
+                .addChannelTypes([ChannelType.GuildAnnouncement])
+        )
+        .addStringOption((option) =>
+            option
+                .setName("title")
+                .setNameLocalizations({
+                    "zh-CN": "标题",
+                    it: "titolo",
+                    tr: "başlık",
+                })
+                .setDescription("Title of the announcement")
+                .setDescriptionLocalizations({
+                    "zh-CN": "公告的标题",
+                    it: "Titolo dell'annuncio",
+                    tr: "Duyurunun başlığı",
+                })
+                .setRequired(false)
+        )
+        .addStringOption((option) =>
+            option
+                .setName("message")
+                .setNameLocalizations({
+                    "zh-CN": "信息",
+                    it: "messaggio",
+                    tr: "mesaj",
+                })
+                .setDescription("Message of the announcement")
+                .setDescriptionLocalizations({
+                    "zh-CN": "公告的消息",
+                    it: "Messaggio dell'annuncio",
+                    tr: "Duyurunun mesajı",
+                })
+                .setRequired(false)
+        )
+        .addAttachmentOption((option) =>
+            option
+                .setName("image")
+                .setNameLocalizations({
+                    "zh-CN": "图片",
+                    it: "immagine",
+                    tr: "resim",
+                })
+                .setDescription("Image to be sent")
+                .setDescriptionLocalizations({
+                    "zh-CN": "要发送的图片",
+                    it: "Immagine da inviare",
+                    tr: "Gönderilecek resim",
+                })
+                .setRequired(false)
+        ),
+    execute: async ({ interaction }) => {
+        const botHasPermission = await checkBotPermissions(
+            interaction,
+            defaultAnnounceMessagePermissions
+        );
+        if (!botHasPermission) return;
+
+        await interaction.deferReply();
+
+        const channel = interaction.options.getChannel("channel");
+        const image = interaction.options.getAttachment("image");
+        const title = interaction.options.getString("title");
+        const message = interaction.options.getString("message");
+
+        let container = new ContainerBuilder().setAccentColor(null);
+
+        if (image) {
+            container.addMediaGalleryComponents(
+                new MediaGalleryBuilder().addItems(
+                    new MediaGalleryItemBuilder().setURL(image.url)
+                )
+            );
+
+            container.addSeparatorComponents(
+                new SeparatorBuilder()
+                    .setSpacing(SeparatorSpacingSize.Large)
+                    .setDivider(true)
+            );
+        }
+
+        container.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+                [`# ${title}`, message].filter(Boolean).join("\n")
+            )
+        );
+
+        const webhook = await channel.createWebhook({
+            name: interaction.guild.name,
+            avatar: interaction.guild.iconURL(),
+        });
+
+        await webhook.send({
+            components: [container],
+            flags: MessageFlags.IsComponentsV2,
+        });
+
+        await webhook.delete();
+
+        await interaction.editReply({
+            content: italic(
+                `${
+                    interaction.user.username
+                } announced something in ${channelMention(channel.id)}.`
+            ),
+        });
+    },
+};

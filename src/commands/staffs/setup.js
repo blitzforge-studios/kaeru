@@ -179,7 +179,6 @@ export default {
 
             const embedDescription =
                 interaction.options.getString("description");
-            const embedColor = interaction.options.getString("color");
             const staffRole = interaction.options.getRole("staff_role").id;
             const banner = interaction.options.getAttachment("image");
             const sendingChannel = interaction.options.getChannel("channel");
