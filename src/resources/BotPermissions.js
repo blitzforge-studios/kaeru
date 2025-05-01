@@ -46,6 +46,15 @@ export const defaultLockTicketPermissions = [
     },
 ];
 
+export const defaultAnnounceMessagePermissions = [
+    ...basePermissions,
+    {
+        permission: PermissionFlagsBits.ManageWebhooks,
+        errorMessage:
+            "Kaeru can't create webhooks to mention everyone and roles along with container message, so Kaeru can't really announce it for you... Also before deleting this message, copy your text on the slash command, so you don't have to rewrite it :3",
+    },
+];
+
 export const defaultGiveawayPermissions = [
     ...basePermissions,
     {
