@@ -49,7 +49,9 @@ export default {
         const RESPONSE = await API.json();
 
         await interaction.editReply({
-            content: `# ${emojis.brain} ${RESPONSE.data.title}\n> ${RESPONSE.data.image}`,
+            content: `# ${emojis.brain} ${RESPONSE.data.title || "meme"}\n> ${
+                RESPONSE.data.image
+            }`,
         });
     },
 };

@@ -9,6 +9,7 @@ import {
     MediaGalleryItemBuilder,
     MessageFlags,
     PermissionFlagsBits,
+    roleMention,
     SeparatorBuilder,
     SeparatorSpacingSize,
     SlashCommandBuilder,
@@ -53,6 +54,22 @@ export default {
         )
         .addStringOption((option) =>
             option
+                .setName("message")
+                .setNameLocalizations({
+                    "zh-CN": "信息",
+                    it: "messaggio",
+                    tr: "mesaj",
+                })
+                .setDescription("Message of the announcement")
+                .setDescriptionLocalizations({
+                    "zh-CN": "公告的消息",
+                    it: "Messaggio dell'annuncio",
+                    tr: "Duyurunun mesajı",
+                })
+                .setRequired(true)
+        )
+        .addStringOption((option) =>
+            option
                 .setName("title")
                 .setNameLocalizations({
                     "zh-CN": "标题",
@@ -69,17 +86,49 @@ export default {
         )
         .addStringOption((option) =>
             option
-                .setName("message")
+                .setName("message_2")
                 .setNameLocalizations({
-                    "zh-CN": "信息",
-                    it: "messaggio",
-                    tr: "mesaj",
+                    "zh-CN": "信息2",
+                    it: "messaggio_2",
+                    tr: "mesaj_2",
                 })
                 .setDescription("Message of the announcement")
                 .setDescriptionLocalizations({
                     "zh-CN": "公告的消息",
                     it: "Messaggio dell'annuncio",
                     tr: "Duyurunun mesajı",
+                })
+                .setRequired(false)
+        )
+        .addStringOption((option) =>
+            option
+                .setName("message_3")
+                .setNameLocalizations({
+                    "zh-CN": "信息3",
+                    it: "messaggio_3",
+                    tr: "mesaj_3",
+                })
+                .setDescription("Message of the announcement")
+                .setDescriptionLocalizations({
+                    "zh-CN": "公告的消息",
+                    it: "Messaggio dell'annuncio",
+                    tr: "Duyurunun mesajı",
+                })
+                .setRequired(false)
+        )
+        .addRoleOption((option) =>
+            option
+                .setName("role")
+                .setNameLocalizations({
+                    "zh-CN": "角色",
+                    it: "ruolo",
+                    tr: "rol",
+                })
+                .setDescription("Role to be tagged")
+                .setDescriptionLocalizations({
+                    "zh-CN": "要标记的角色",
+                    it: "Ruolo da taggare",
+                    tr: "Etiketlenecek rol",
                 })
                 .setRequired(false)
         )
@@ -110,8 +159,11 @@ export default {
 
         const channel = interaction.options.getChannel("channel");
         const image = interaction.options.getAttachment("image");
-        const title = interaction.options.getString("title");
-        const message = interaction.options.getString("message");
+        const role = interaction.options.getRole("role");
+        const title = interaction.options.getString("title") || "Announcement";
+        const message1 = interaction.options.getString("message"),
+            message2 = interaction.options.getString("message_2"),
+            message3 = interaction.options.getString("message_3");
 
         let container = new ContainerBuilder().setAccentColor(null);
 
@@ -131,9 +183,39 @@ export default {
 
         container.addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-                [`# ${title}`, message].filter(Boolean).join("\n")
+                [
+                    `# ${title}`,
+                    "",
+                    role ? `-# [${roleMention(role.id)}]` : "-# [no mention.]",
+                    "",
+                    message1,
+                ].join("\n")
             )
         );
+
+        if (message2) {
+            container.addSeparatorComponents(
+                new SeparatorBuilder()
+                    .setSpacing(SeparatorSpacingSize.Small)
+                    .setDivider(true)
+            );
+
+            container.addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(message2)
+            );
+        }
+
+        if (message3) {
+            container.addSeparatorComponents(
+                new SeparatorBuilder()
+                    .setSpacing(SeparatorSpacingSize.Small)
+                    .setDivider(true)
+            );
+
+            container.addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(message3)
+            );
+        }
 
         const webhook = await channel.createWebhook({
             name: interaction.guild.name,
