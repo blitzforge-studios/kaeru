@@ -49,6 +49,11 @@ export const defaultLockTicketPermissions = [
 export const defaultAnnounceMessagePermissions = [
     ...basePermissions,
     {
+        permission: PermissionFlagsBits.ManageMessages,
+        errorMessage:
+            "Kaeru can't manage messages, so Kaeru can't publish your message. Also before deleting this message, copy your text on the slash command, so you don't have to rewrite it :3",
+    },
+    {
         permission: PermissionFlagsBits.MentionEveryone,
         errorMessage:
             "Kaeru can't mention everyone and roles, so Kaeru can't really announce it for you... Also before deleting this message, copy your text on the slash command, so you don't have to rewrite it :3",
