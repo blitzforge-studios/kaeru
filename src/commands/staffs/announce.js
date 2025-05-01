@@ -17,6 +17,7 @@ import {
 } from "discord.js";
 import { checkBotPermissions } from "../../functions/checkPermissions.js";
 import { defaultAnnounceMessagePermissions } from "../../resources/BotPermissions.js";
+import { emojis } from "../../resources/emojis.js";
 
 export default {
     data: new SlashCommandBuilder()
@@ -222,10 +223,17 @@ export default {
             avatar: interaction.guild.iconURL(),
         });
 
-        await webhook.send({
+        const sentMessage = await webhook.send({
             components: [container],
             flags: MessageFlags.IsComponentsV2,
         });
+
+        await sentMessage.react(emojis.reactions.reaction_heart_u);
+        await sentMessage.react(emojis.reactions.reaction_thumbsup_u);
+        await sentMessage.react(emojis.reactions.reaction_thumbsdown_u);
+        await sentMessage.react(emojis.reactions.reaction_haha_u);
+        await sentMessage.react(emojis.reactions.reaction_emphasize_u);
+        await sentMessage.react(emojis.reactions.reaction_question_u);
 
         await webhook.delete();
 
