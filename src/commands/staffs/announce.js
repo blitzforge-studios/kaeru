@@ -219,6 +219,18 @@ export default {
             );
         }
 
+        container.addSeparatorComponents(
+            new SeparatorBuilder()
+                .setSpacing(SeparatorSpacingSize.Large)
+                .setDivider(true)
+        );
+
+        container.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+                `-# ${emojis.bubble} _@${interaction.user.username}_`
+            )
+        );
+
         try {
             const webhook = await channel.createWebhook({
                 name: interaction.guild.name,
@@ -237,8 +249,6 @@ export default {
                     reason: `${interaction.user.username} created a thread for announcement`,
                 });
 
-                await sentMessage.crosspost();
-
                 await sentMessage.react(emojis.reactions.reaction_heart_u);
                 await sentMessage.react(emojis.reactions.reaction_thumbsup_u);
                 await sentMessage.react(emojis.reactions.reaction_thumbsdown_u);
@@ -246,12 +256,10 @@ export default {
                 await sentMessage.react(emojis.reactions.reaction_emphasize_u);
                 await sentMessage.react(emojis.reactions.reaction_question_u);
 
+                await sentMessage.crosspost();
+
                 await interaction.editReply({
-                    content: italic(
-                        `${
-                            interaction.user.username
-                        } announced something in ${channelMention(channel.id)}.`
-                    ),
+                    content: italic(`Done! Announcement sent to ${channel}!`),
                 });
             } catch (error) {
                 console.error("Error sending announcement:", error);

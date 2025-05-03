@@ -7,9 +7,9 @@ export const botPresence = {
     status: PresenceUpdateStatus.Idle,
     activities: [
         {
-            name: "Pro-tickets",
-            type: ActivityType.Playing,
-            state: "Serving Pro-tickets for your community",
+            name: "Pro-features",
+            type: ActivityType.Watching,
+            state: "Serving free pro features for your community.",
         },
     ],
 };
