@@ -159,7 +159,8 @@ export default {
         );
         if (!botHasPermission) return;
 
-        await interaction.deferReply();
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
         const image = interaction.options.getAttachment("image");
         const role = interaction.options.getRole("role");
         const title = interaction.options.getString("title") || "Announcement";
