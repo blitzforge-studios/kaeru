@@ -1,6 +1,5 @@
 import {
     ApplicationIntegrationType,
-    channelMention,
     ChannelType,
     ContainerBuilder,
     InteractionContextType,
@@ -14,6 +13,10 @@ import {
     SeparatorSpacingSize,
     SlashCommandBuilder,
     TextDisplayBuilder,
+    FileBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    PermissionsBitField,
 } from "discord.js";
 import { checkBotPermissions } from "../../functions/checkPermissions.js";
 import { defaultAnnounceMessagePermissions } from "../../resources/BotPermissions.js";
@@ -118,6 +121,24 @@ export default {
                 })
                 .setRequired(false)
         )
+        .addStringOption((option) =>
+            option
+                .setName("link")
+                .setNameLocalizations({
+                    "zh-CN": "链接",
+                    it: "link",
+                    tr: "bağlantı",
+                })
+                .setDescription(
+                    "Link to be sent in button (usage: https://google.com, Google)"
+                )
+                .setDescriptionLocalizations({
+                    "zh-CN": "要发送的链接（用法：https://google.com, Google）",
+                    it: "Link da inviare nel pulsante (uso: https://google.com, Google)",
+                    tr: "Gönderilecek bağlantı (kullanım: https://google.com, Google)",
+                })
+                .setRequired(false)
+        )
         .addRoleOption((option) =>
             option
                 .setName("role")
@@ -136,17 +157,17 @@ export default {
         )
         .addAttachmentOption((option) =>
             option
-                .setName("image")
+                .setName("attachment")
                 .setNameLocalizations({
-                    "zh-CN": "图片",
-                    it: "immagine",
-                    tr: "resim",
+                    "zh-CN": "附件",
+                    it: "allegato",
+                    tr: "ek",
                 })
-                .setDescription("Image to be sent")
+                .setDescription("Attachment to be sent")
                 .setDescriptionLocalizations({
-                    "zh-CN": "要发送的图片",
-                    it: "Immagine da inviare",
-                    tr: "Gönderilecek resim",
+                    "zh-CN": "要发送的附件",
+                    it: "Allegato da inviare",
+                    tr: "Gönderilecek ek",
                 })
                 .setRequired(false)
         ),
@@ -161,65 +182,80 @@ export default {
 
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-        const image = interaction.options.getAttachment("image");
+        const attachment = interaction.options.getAttachment("attachment");
         const role = interaction.options.getRole("role");
         const title = interaction.options.getString("title") || "Announcement";
+        const link = interaction.options.getString("link");
         const message1 = interaction.options.getString("message"),
             message2 = interaction.options.getString("message_2"),
             message3 = interaction.options.getString("message_3");
 
-        let container = new ContainerBuilder().setAccentColor(null);
+        const container = new ContainerBuilder().setAccentColor(null);
+        const files = [];
 
-        if (image) {
-            container.addMediaGalleryComponents(
-                new MediaGalleryBuilder().addItems(
-                    new MediaGalleryItemBuilder().setURL(image.url)
-                )
-            );
-
-            container.addSeparatorComponents(
-                new SeparatorBuilder()
-                    .setSpacing(SeparatorSpacingSize.Large)
-                    .setDivider(true)
-            );
+        // Handle attachment
+        if (attachment) {
+            if (attachment.contentType?.startsWith("image/")) {
+                container.addMediaGalleryComponents(
+                    new MediaGalleryBuilder().addItems(
+                        new MediaGalleryItemBuilder().setURL(attachment.url)
+                    )
+                );
+            } else {
+                container.addFileComponents(
+                    new FileBuilder().setURL(`attachment://${attachment.name}`)
+                );
+                files.push({
+                    attachment: attachment.url,
+                    name: attachment.name,
+                });
+            }
         }
+
+        // Add separator and message content
+        const combinedMessages = [
+            `# ${title}`,
+            "",
+            role ? `-# [${roleMention(role.id)}]` : "-# [no mention.]",
+            "",
+            formatMultiline(message1),
+            message2 ? formatMultiline(message2) : "",
+            message3 ? formatMultiline(message3) : "",
+        ]
+            .filter(Boolean)
+            .join("\n\n");
 
         container.addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(
-                [
-                    `# ${title}`,
-                    "",
-                    role ? `-# [${roleMention(role.id)}]` : "-# [no mention.]",
-                    "",
-                    message1,
-                ].join("\n")
-            )
+            new TextDisplayBuilder().setContent(combinedMessages)
         );
 
-        if (message2) {
-            container.addSeparatorComponents(
-                new SeparatorBuilder()
-                    .setSpacing(SeparatorSpacingSize.Small)
-                    .setDivider(true)
-            );
+        // Add link button if provided
+        if (link) {
+            const [first, second] = link.split(",");
 
-            container.addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(message2)
+            const url = first.trim();
+            const label = second?.trim();
+
+            try {
+                new URL(url);
+            } catch {
+                await interaction.editReply({
+                    content: `${emojis.error} Invalid link format. Please use: \`<url>, <label>\` — e.g., \`https://example.com, Visit site\``,
+                });
+                return;
+            }
+
+            container.addActionRowComponents((row) =>
+                row.addComponents(
+                    new ButtonBuilder()
+                        .setLabel(label || "Link")
+                        .setURL(url)
+                        .setStyle(ButtonStyle.Link)
+                )
             );
         }
 
-        if (message3) {
-            container.addSeparatorComponents(
-                new SeparatorBuilder()
-                    .setSpacing(SeparatorSpacingSize.Small)
-                    .setDivider(true)
-            );
-
-            container.addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(message3)
-            );
-        }
-
+        // Add footer message
         container.addSeparatorComponents(
             new SeparatorBuilder()
                 .setSpacing(SeparatorSpacingSize.Large)
@@ -228,7 +264,7 @@ export default {
 
         container.addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-                `-# ${emojis.bubble} _@${interaction.user.username}_`
+                `-# ${emojis.bubble} __@${interaction.user.username}__`
             )
         );
 
@@ -241,6 +277,7 @@ export default {
             try {
                 const sentMessage = await webhook.send({
                     components: [container],
+                    files: files.length > 0 ? files : undefined,
                     flags: MessageFlags.IsComponentsV2,
                 });
 
@@ -257,7 +294,21 @@ export default {
                 await sentMessage.react(emojis.reactions.reaction_emphasize_u);
                 await sentMessage.react(emojis.reactions.reaction_question_u);
 
-                await sentMessage.crosspost();
+                if (
+                    channel
+                        .permissionsFor(interaction.guild.members.me)
+                        ?.has(PermissionsBitField.Flags.ManageMessages)
+                ) {
+                    try {
+                        await sentMessage.crosspost();
+                    } catch (error) {
+                        console.error("Error crossposting message:", error);
+                    }
+                } else {
+                    console.warn(
+                        "Kaeru lacks MANAGE_MESSAGES permission. Skipping crosspost."
+                    );
+                }
 
                 await interaction.editReply({
                     content: italic(`Done! Announcement sent to ${channel}!`),
@@ -278,3 +329,26 @@ export default {
         }
     },
 };
+
+function formatMultiline(input) {
+    return input
+        .split("\n")
+        .flatMap(function (line) {
+            const headingMatch = line.match(/^(#+)\s+(.*)$/);
+            if (headingMatch) {
+                const hashes = headingMatch[1];
+                const content = headingMatch[2];
+                const parts = content
+                    .split(/\s{2,}/)
+                    .map((str) => str.trim())
+                    .filter(Boolean);
+                return [hashes + " " + parts[0]].concat(parts.slice(1));
+            }
+
+            return line
+                .split(/\s{2,}/)
+                .map((str) => str.trim())
+                .filter(Boolean);
+        })
+        .join("\n");
+}
