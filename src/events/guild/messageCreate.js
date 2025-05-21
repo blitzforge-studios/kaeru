@@ -18,10 +18,11 @@ export default {
     async execute(message) {
         if (message.author.bot) return;
 
-        const isBotThread =
-            message.channel?.isThread() &&
-            message.channel.ownerId === message.client.user.id;
-        if (!isBotThread && !message.mentions.has(message.client.user)) return;
+        const isKaeruThread =
+            message.channel.isThread() && message.channel.name.startsWith("💭");
+
+        if (!isKaeruThread && !message.mentions.has(message.client.user))
+            return;
 
         try {
             let thread;
@@ -52,10 +53,12 @@ export default {
 
             if (!message.thread && message.channel?.type === 0) {
                 thread = await message.startThread({
-                    name: threadName || `💭 Kaeru & ${message.author.username}`,
+                    name: threadName
+                        ? `💭 ${threadName}`
+                        : `💭 Kaeru & ${message.author.username}`,
                     autoArchiveDuration: 60,
                 });
-            } else if (message.thread) {
+            } else if (message.thread && isKaeruThread) {
                 thread = message.thread;
             } else {
                 thread = message.channel;
