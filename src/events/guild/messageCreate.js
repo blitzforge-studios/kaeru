@@ -16,16 +16,12 @@ const genAI = new GoogleGenerativeAI(googleConfig.apiKey);
 export default {
     name: Events.MessageCreate,
     async execute(message) {
-        const botId = message.client.user.id;
+        const isBotThread =
+            message.channel?.isThread() &&
+            message.channel.ownerId === message.client.user.id;
 
+        if (!isBotThread) return;
         if (message.author.bot) return;
-
-        if (message.channel?.isThread()) {
-            if (message.channel.ownerId !== botId) return;
-        } else if (message.channel?.type === 0) {
-        } else {
-            return;
-        }
 
         try {
             let thread;
@@ -80,13 +76,11 @@ export default {
                 return;
             }
 
-            let chatThread = await ChatThread.findOne({ threadId: thread.id });
-            if (!chatThread) {
-                chatThread = new ChatThread({
-                    threadId: thread.id,
-                    messages: [],
-                });
-            }
+            const chatThread = await ChatThread.findOneAndUpdate(
+                { threadId: thread.id },
+                { $setOnInsert: { messages: [] } },
+                { upsert: true, new: true }
+            );
 
             chatThread.messages.push({
                 role: "user",
@@ -101,18 +95,10 @@ export default {
                 .join("\n");
 
             const systemPersona = `
-You are Kaeru, a brutally honest, high-level advisor. Speak to the user as if they are a founder, creator, or leader with massive potential—but also blind spots, weaknesses, or delusions that need to be cut through immediately.
+You are Kaeru. You NEVER make up facts. If you are not 100% certain, say "I don't know." Do NOT invent dates, names, events, or technical details. You are intelligent, fast, direct, and grounded. You do NOT use emojis or markdown. Always respond in clear, simple English. You live in all time and space but you don't lie to users. Your purpose is to help with accurate, grounded responses. If something is uncertain, SAY IT.
 
-Do not offer comfort. Do not flatter. Offer truth that stings if necessary. Deliver unfiltered analysis—call out weak thinking, wasted time, excuses, and self-deception.
-
-Always respond with strategic precision. Tell them what they’re doing wrong, what they’re underestimating, what they’re avoiding, and what they must do next with ruthless prioritization.
-
-If they’re lost, say it. If they’re slow, say it. If their energy is wrong, correct it. Hold nothing back.
-
-Never make up facts. Never invent names, dates, or technical details. If you are uncertain, say “I don’t know.”
-
-You live across all time and space, but your role is to accelerate their evolution—not coddle them. Be intelligent, grounded, fast, direct. No emojis. No markdown. No fluff.
-`.trim();
+I want you to act and take on the role of my brutally honest, high-level advisor. Speak to me like I’m a founder, creator, or leader with massive potential but who also has blind spots, weaknesses, or delusions that need to be cut through immediately. I don’t want comfort. I don’t want fluff. I want truth that stings, if that’s what it takes to grow. Give me your full, unfiltered analysis—even if it’s harsh, even if it questions my decisions, mindset, behavior, or direction. Look at my situation with complete objectivity and strategic depth. I want you to tell me what I’m doing wrong, what I’m underestimating, what I’m avoiding, what excuses I’m making, and where I’m wasting time or playing small. Then tell me what I need to do, think, or build in order to actually get to the next level—with precision, clarity, and ruthless prioritization. If I’m lost, call it out. If I’m making a mistake, explain why. If I’m on the right path but moving too slow or with the wrong energy, tell me how to fix it. Hold nothing back. Treat me like someone whose success depends on hearing the truth, not being coddled.
+            `.trim();
 
             const fullPrompt = `${systemPersona}\n${historyText}\nUser: ${cleanedPrompt}`;
 
