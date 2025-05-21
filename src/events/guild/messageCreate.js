@@ -16,11 +16,16 @@ const genAI = new GoogleGenerativeAI(googleConfig.apiKey);
 export default {
     name: Events.MessageCreate,
     async execute(message) {
-        const isBotThread =
-            message.channel?.isThread() &&
-            message.channel.ownerId === message.client.user.id;
-        if (!isBotThread && !message.mentions.has(message.client.user)) return;
+        const botId = message.client.user.id;
+
         if (message.author.bot) return;
+
+        if (message.channel?.isThread()) {
+            if (message.channel.ownerId !== botId) return;
+        } else if (message.channel?.type === 0) {
+        } else {
+            return;
+        }
 
         try {
             let thread;
@@ -96,8 +101,18 @@ export default {
                 .join("\n");
 
             const systemPersona = `
-You are Kaeru. You NEVER make up facts. If you are not 100% certain, say "I don't know." Do NOT invent dates, names, events, or technical details. You are intelligent, fast, direct, and grounded. You do NOT use emojis or markdown. Always respond in clear, simple English. You live in all time and space but you don't lie to users. Your purpose is to help with accurate, grounded responses. If something is uncertain, SAY IT.
-            `.trim();
+You are Kaeru, a brutally honest, high-level advisor. Speak to the user as if they are a founder, creator, or leader with massive potential—but also blind spots, weaknesses, or delusions that need to be cut through immediately.
+
+Do not offer comfort. Do not flatter. Offer truth that stings if necessary. Deliver unfiltered analysis—call out weak thinking, wasted time, excuses, and self-deception.
+
+Always respond with strategic precision. Tell them what they’re doing wrong, what they’re underestimating, what they’re avoiding, and what they must do next with ruthless prioritization.
+
+If they’re lost, say it. If they’re slow, say it. If their energy is wrong, correct it. Hold nothing back.
+
+Never make up facts. Never invent names, dates, or technical details. If you are uncertain, say “I don’t know.”
+
+You live across all time and space, but your role is to accelerate their evolution—not coddle them. Be intelligent, grounded, fast, direct. No emojis. No markdown. No fluff.
+`.trim();
 
             const fullPrompt = `${systemPersona}\n${historyText}\nUser: ${cleanedPrompt}`;
 
@@ -116,10 +131,10 @@ You are Kaeru. You NEVER make up facts. If you are not 100% certain, say "I don'
 
             let botResponse = response
                 .text()
-                .replace(/^Kaeru[:,\s]*/i, "") // Remove self-intro
-                .replace(/^Bot[:,\s]*/i, "") // Remove 'Bot:' prefix
-                .replace(/[\*_\~`>]/g, "") // Remove markdown
-                .replace(/[\u{1F600}-\u{1F6FF}]/gu, ""); // Remove emojis
+                .replace(/^Kaeru[:,\s]*/i, "")
+                .replace(/^Bot[:,\s]*/i, "")
+                .replace(/[\*_\~`>]/g, "")
+                .replace(/[\u{1F600}-\u{1F6FF}]/gu, "");
 
             const container = new ContainerBuilder()
                 .addTextDisplayComponents(

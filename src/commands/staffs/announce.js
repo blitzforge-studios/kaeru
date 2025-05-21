@@ -294,22 +294,6 @@ export default {
                 await sentMessage.react(emojis.reactions.reaction_emphasize_u);
                 await sentMessage.react(emojis.reactions.reaction_question_u);
 
-                if (
-                    channel
-                        .permissionsFor(interaction.guild.members.me)
-                        ?.has(PermissionsBitField.Flags.ManageMessages)
-                ) {
-                    try {
-                        await sentMessage.crosspost();
-                    } catch (error) {
-                        console.error("Error crossposting message:", error);
-                    }
-                } else {
-                    console.warn(
-                        "Kaeru lacks MANAGE_MESSAGES permission. Skipping crosspost."
-                    );
-                }
-
                 await interaction.editReply({
                     content: italic(`Done! Announcement sent to ${channel}!`),
                 });
