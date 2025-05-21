@@ -17,7 +17,7 @@ export default {
         .setName("Quick-Ticket")
         .setNameLocalizations({
             it: "Biglietto Rapido",
-            tr: "Hızlı Bilet",
+            tr: "Hızlı Talep Formu",
             ro: "Bilet Rapid",
             el: "Γρήγορο Εισιτήριο",
             ChineseCN: "快速票证",

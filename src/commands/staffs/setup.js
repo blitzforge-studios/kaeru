@@ -43,13 +43,13 @@ export default {
                 .setNameLocalizations({
                     "zh-CN": "票",
                     it: "biglietto",
-                    tr: "bilet",
+                    tr: "talep-formu",
                 })
                 .setDescription("Setup ticket system with threads!")
                 .setDescriptionLocalizations({
                     "zh-CN": "使用线程设置票证系统。",
                     it: "Configurazione del sistema di ticket con thread.",
-                    tr: "Alt başlıklarla bilet sistemi kurulumunu yap.",
+                    tr: "Alt başlıklarla talep formu kurulumunu yap.",
                 })
                 .addRoleOption((option) =>
                     option
@@ -65,7 +65,7 @@ export default {
                         .setDescriptionLocalizations({
                             "zh-CN": "创建工单通道时要标记的角色",
                             it: "Ruolo da taggare quando viene creato il canale ticket",
-                            tr: "Bilet kanalı oluşturulduğunda etiketlenecek rol",
+                            tr: "Talep kanalı oluşturulduğunda etiketlenecek rol",
                         })
                         .setRequired(true)
                 )
