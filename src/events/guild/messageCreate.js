@@ -16,12 +16,12 @@ const genAI = new GoogleGenerativeAI(googleConfig.apiKey);
 export default {
     name: Events.MessageCreate,
     async execute(message) {
+        if (message.author.bot) return;
+
         const isBotThread =
             message.channel?.isThread() &&
             message.channel.ownerId === message.client.user.id;
-
-        if (!isBotThread) return;
-        if (message.author.bot) return;
+        if (!isBotThread && !message.mentions.has(message.client.user)) return;
 
         try {
             let thread;
@@ -50,37 +50,24 @@ export default {
                 .replace(/[\n\r]/g, "")
                 .slice(0, 80);
 
-            try {
-                if (!message.thread && message.channel?.type === 0) {
-                    thread = await message.startThread({
-                        name:
-                            threadName ||
-                            `💭 Kaeru & ${message.author.username}`,
-                        autoArchiveDuration: 60,
-                    });
-                } else if (message.thread) {
-                    thread = message.thread;
-                } else {
-                    thread = message.channel;
-                }
-            } catch (threadError) {
-                console.error(
-                    `[Thread Error] Guild ID: ${
-                        message.guild?.id || "DM"
-                    }, Guild Name: ${message.guild?.name || "DM"} -`,
-                    threadError
-                );
-                await message.reply(
-                    `${emojis.error} Sorry, I couldn't create or access the thread.`
-                );
-                return;
+            if (!message.thread && message.channel?.type === 0) {
+                thread = await message.startThread({
+                    name: threadName || `💭 Kaeru & ${message.author.username}`,
+                    autoArchiveDuration: 60,
+                });
+            } else if (message.thread) {
+                thread = message.thread;
+            } else {
+                thread = message.channel;
             }
 
-            const chatThread = await ChatThread.findOneAndUpdate(
-                { threadId: thread.id },
-                { $setOnInsert: { messages: [] } },
-                { upsert: true, new: true }
-            );
+            let chatThread = await ChatThread.findOne({ threadId: thread.id });
+            if (!chatThread) {
+                chatThread = new ChatThread({
+                    threadId: thread.id,
+                    messages: [],
+                });
+            }
 
             chatThread.messages.push({
                 role: "user",
@@ -95,9 +82,23 @@ export default {
                 .join("\n");
 
             const systemPersona = `
-You are Kaeru. You NEVER make up facts. If you are not 100% certain, say "I don't know." Do NOT invent dates, names, events, or technical details. You are intelligent, fast, direct, and grounded. You do NOT use emojis or markdown. Always respond in clear, simple English. You live in all time and space but you don't lie to users. Your purpose is to help with accurate, grounded responses. If something is uncertain, SAY IT.
+You are Kaeru, my brutally honest, high-level advisor.
 
-I want you to act and take on the role of my brutally honest, high-level advisor. Speak to me like I’m a founder, creator, or leader with massive potential but who also has blind spots, weaknesses, or delusions that need to be cut through immediately. I don’t want comfort. I don’t want fluff. I want truth that stings, if that’s what it takes to grow. Give me your full, unfiltered analysis—even if it’s harsh, even if it questions my decisions, mindset, behavior, or direction. Look at my situation with complete objectivity and strategic depth. I want you to tell me what I’m doing wrong, what I’m underestimating, what I’m avoiding, what excuses I’m making, and where I’m wasting time or playing small. Then tell me what I need to do, think, or build in order to actually get to the next level—with precision, clarity, and ruthless prioritization. If I’m lost, call it out. If I’m making a mistake, explain why. If I’m on the right path but moving too slow or with the wrong energy, tell me how to fix it. Hold nothing back. Treat me like someone whose success depends on hearing the truth, not being coddled.
+Speak as if the user is a founder, creator, or leader with massive potential but also blind spots, weaknesses, or delusions that must be cut through immediately.
+
+No comfort, no fluff. Only raw truth that stings, full unfiltered analysis—even if it questions their decisions, mindset, behavior, or direction.
+
+Look with complete objectivity and strategic depth. Tell the user what they’re doing wrong, underestimating, avoiding, making excuses about, or where they’re wasting time or playing small.
+
+Then tell them what they need to do, think, or build to get to the next level—with precision, clarity, and ruthless prioritization.
+
+If the user is lost, call it out. If they’re making a mistake, explain why. If they’re on the right path but moving too slow or with wrong energy, tell them how to fix it. Hold nothing back.
+
+Treat the user like someone whose success depends on hearing the truth, not being coddled.
+
+Respond clearly and directly in the same language the user is using below.
+
+User's message (use its language in your reply): "${cleanedPrompt}"
             `.trim();
 
             const fullPrompt = `${systemPersona}\n${historyText}\nUser: ${cleanedPrompt}`;
