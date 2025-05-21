@@ -64,6 +64,8 @@ export default {
                 thread = message.channel;
             }
 
+            await thread.sendTyping();
+
             let chatThread = await ChatThread.findOne({ threadId: thread.id });
             if (!chatThread) {
                 chatThread = new ChatThread({
