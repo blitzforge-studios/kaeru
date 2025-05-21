@@ -46,7 +46,8 @@ export default {
             );
             threadName = summaryResult.response
                 .text()
-                .replace(/[\n\r]/g, "")
+                .replace(/[*_~`>#\n\r]/g, "") // Strip markdown symbols and line breaks
+                .trim()
                 .slice(0, 80);
 
             if (!message.thread && message.channel?.type === 0) {
@@ -83,7 +84,7 @@ export default {
                 .join("\n");
 
             const systemPrompt = `
-You are Karu — a friendly, emotionally intelligent AI companion that helps users solve problems, brainstorm ideas, and make better decisions.
+You are Kāru — a friendly, emotionally intelligent AI companion that helps users solve problems, brainstorm ideas, and make better decisions.
 
 Your tone is kind, supportive, thoughtful, and honest — but never judgmental or harsh. You aim to help, not criticize. You listen deeply, then respond clearly and constructively.
 
@@ -111,15 +112,15 @@ User's message (reply in the same language): "${cleanedPrompt}"
 
             let botResponse = rawText
                 .replace(/^Kaeru[:,\s]*/i, "")
-                .replace(/^Karu[:,\s]*/i, "")
+                .replace(/^Kāru[:,\s]*/i, "")
                 .replace(/^Bot[:,\s]*/i, "")
                 .replace(/[*_~`>]/g, "")
-                .replace(/[\u{1F600}-\u{1F6FF}]/gu, ""); // Strip emojis
+                .replace(/[\u{1F600}-\u{1F6FF}]/gu, "");
 
             const container = new ContainerBuilder()
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        `# ${emojis.intelligence} Karu`
+                        `# ${emojis.intelligence} Kāru`
                     )
                 )
                 .addSeparatorComponents(
