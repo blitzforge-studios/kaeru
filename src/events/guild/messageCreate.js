@@ -18,11 +18,10 @@ export default {
     async execute(message) {
         if (message.author.bot) return;
 
-        const isKaeruThread =
+        const isKaruThread =
             message.channel.isThread() && message.channel.name.startsWith("💭");
 
-        if (!isKaeruThread && !message.mentions.has(message.client.user))
-            return;
+        if (!isKaruThread && !message.mentions.has(message.client.user)) return;
 
         try {
             let thread;
@@ -40,13 +39,12 @@ export default {
                 .replace(/<@!?\d+>/g, "")
                 .trim();
 
-            const summaryPrompt = `Summarize the following user message not exceeding 5 words. Only return the title:\n"${cleanedPrompt}"`;
+            const summaryPrompt = `Summarize the following user message in under 5 words for use as a thread title:\n"${cleanedPrompt}"`;
 
             const summaryResult = await summaryModel.generateContent(
                 summaryPrompt
             );
-            const summaryResponse = summaryResult.response;
-            threadName = summaryResponse
+            threadName = summaryResult.response
                 .text()
                 .replace(/[\n\r]/g, "")
                 .slice(0, 80);
@@ -55,10 +53,10 @@ export default {
                 thread = await message.startThread({
                     name: threadName
                         ? `💭 ${threadName}`
-                        : `💭 Kaeru & ${message.author.username}`,
+                        : `💭 Kāru & ${message.author.username}`,
                     autoArchiveDuration: 60,
                 });
-            } else if (message.thread && isKaeruThread) {
+            } else if (message.thread && isKaruThread) {
                 thread = message.thread;
             } else {
                 thread = message.channel;
@@ -74,34 +72,34 @@ export default {
                 });
             }
 
-            chatThread.messages.push({
-                role: "user",
-                content: cleanedPrompt,
-            });
+            chatThread.messages.push({ role: "user", content: cleanedPrompt });
 
             const history = chatThread.messages.slice(-10);
             const historyText = history
                 .map(
-                    (m) => `${m.role === "user" ? "User" : "Bot"}: ${m.content}`
+                    (m) =>
+                        `${m.role === "user" ? "User" : "Kāru"}: ${m.content}`
                 )
                 .join("\n");
 
-            const systemPersona = `
-You are Kaeru, a friendly, thoughtful and smart AI friend designed to help users solve problems, brainstorm ideas, and support them through conversation.
+            const systemPrompt = `
+You are Karu — a friendly, emotionally intelligent AI companion that helps users solve problems, brainstorm ideas, and make better decisions.
 
-Be kind, curious, helpful, and conversational. Use a supportive tone. You may use light emojis and casual phrasing to sound more natural, like a friend chatting with the user.
+Your tone is kind, supportive, thoughtful, and honest — but never judgmental or harsh. You aim to help, not criticize. You listen deeply, then respond clearly and constructively.
 
-When responding, take into account their emotional state, show empathy, and try to be genuinely helpful. Avoid being overly blunt or robotic.
+Give actionable suggestions, clarify confusion, and make the user feel supported and empowered.
 
-User's message: "${cleanedPrompt}"
+You never reveal internal model names or AI configuration (you are "Kāru", not Gemma or Gemini).
+
+User's message (reply in the same language): "${cleanedPrompt}"
 `.trim();
 
-            const fullPrompt = `${systemPersona}\n${historyText}\nUser: ${cleanedPrompt}`;
+            const fullPrompt = `${systemPrompt}\n${historyText}\nUser: ${cleanedPrompt}`;
 
             const model = genAI.getGenerativeModel({
                 model: "gemma-3n-e4b-it",
                 generationConfig: {
-                    temperature: 0.5,
+                    temperature: 0.2,
                     topK: 1,
                     topP: 1,
                     maxOutputTokens: 2048,
@@ -109,19 +107,19 @@ User's message: "${cleanedPrompt}"
             });
 
             const result = await model.generateContent(fullPrompt);
-            const response = result.response;
+            const rawText = result.response.text();
 
-            let botResponse = response
-                .text()
+            let botResponse = rawText
                 .replace(/^Kaeru[:,\s]*/i, "")
+                .replace(/^Karu[:,\s]*/i, "")
                 .replace(/^Bot[:,\s]*/i, "")
-                .replace(/[\*_\~`>]/g, "")
-                .replace(/[\u{1F600}-\u{1F6FF}]/gu, "");
+                .replace(/[*_~`>]/g, "")
+                .replace(/[\u{1F600}-\u{1F6FF}]/gu, ""); // Strip emojis
 
             const container = new ContainerBuilder()
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        `# ${emojis.intelligence} Kāru`
+                        `# ${emojis.intelligence} Karu`
                     )
                 )
                 .addSeparatorComponents(
@@ -138,16 +136,12 @@ User's message: "${cleanedPrompt}"
                 flags: MessageFlags.IsComponentsV2,
             });
 
-            chatThread.messages.push({
-                role: "model",
-                content: botResponse,
-            });
-
+            chatThread.messages.push({ role: "model", content: botResponse });
             await chatThread.save();
         } catch (error) {
             console.error(`${emojis.error} Error:`, error);
             await message.reply(
-                `${emojis.error} Sorry, something went wrong: ${error.message}`
+                `${emojis.error} Something went wrong: ${error.message}`
             );
         }
     },
