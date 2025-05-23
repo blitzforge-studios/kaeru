@@ -29,33 +29,52 @@ export default {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
         const message = interaction.options.getMessage("message");
-        if (
-            !message ||
-            typeof message.content !== "string" ||
-            message.content.trim() === ""
-        ) {
+        if (!message) {
             return interaction.editReply({
-                content: `# ${emojis.info} \nEmbeds, attachments, or system messages etc. are not supported. Maybe copy the text from the message and paste it here?`,
+                content: `# ${emojis.info} \nMesaj alınamadı.`,
             });
         }
 
-        const messageContent = message.content.trim();
+        let textToSummarize = "";
+
+        if (message.content && message.content.trim() !== "") {
+            textToSummarize += message.content.trim() + "\n";
+        }
+
+        if (message.embeds.length > 0) {
+            for (const embed of message.embeds) {
+                if (embed.title) textToSummarize += embed.title + "\n";
+                if (embed.description)
+                    textToSummarize += embed.description + "\n";
+                if (embed.fields) {
+                    for (const field of embed.fields) {
+                        textToSummarize += `${field.name}: ${field.value}\n`;
+                    }
+                }
+            }
+        }
+
+        if (textToSummarize.trim() === "") {
+            return interaction.editReply({
+                content: `# ${emojis.info} \nEmbeds, attachments veya sistem mesajları gibi desteklenmeyen içerikler. Lütfen metni kopyalayıp buraya yapıştırın.`,
+            });
+        }
 
         const prompt = `
-      Summarize the following text into ONE clear, concise paragraph. Then list the KEY POINTS as bullet points. Do NOT add opinions or extra details.
+Summarize the following text into ONE clear, concise paragraph. Then list the KEY POINTS as bullet points. Do NOT add opinions or extra details.
 
-      Text:
-      """${messageContent}"""
-      
-      Format:
-      Summary:
-      [summary paragraph]
+Text:
+"""${textToSummarize.trim()}"""
 
-      Key Points:
-      - point 1
-      - point 2
-      - point 3
-    `;
+Format:
+Summary:
+[summary paragraph]
+
+Key Points:
+- point 1
+- point 2
+- point 3
+`;
 
         try {
             const model = googleai.getGenerativeModel({

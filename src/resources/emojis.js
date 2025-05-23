@@ -65,7 +65,7 @@ export const emojis = {
     globe: "<:globe:1331705467839320074>",
 
     // AI
-    intelligence: "<:intelligence:1374543385289035806>",
+    intelligence: "<:Karu:1375522815549116566>",
     magic: "<:wand:1375436613856788550>",
     text_append: "<:text_append:1375448596509495366>",
     list_bullet: "<:list_bullet:1375468308022951966>",
