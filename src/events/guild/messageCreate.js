@@ -1,17 +1,13 @@
 import {
     Events,
-    ContainerBuilder,
     TextDisplayBuilder,
-    SeparatorBuilder,
-    SeparatorSpacingSize,
     MessageFlags,
+    SectionBuilder,
+    ThumbnailBuilder,
 } from "discord.js";
 import ChatThread from "../../models/ChatThread.js";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { googleai as googleConfig } from "../../config/Configs.js";
+import { googleai } from "../../config/Configs.js";
 import { emojis } from "../../resources/emojis.js";
-
-const genAI = new GoogleGenerativeAI(googleConfig.apiKey);
 
 export default {
     name: Events.MessageCreate,
@@ -27,7 +23,7 @@ export default {
             let thread;
             let threadName = null;
 
-            const summaryModel = genAI.getGenerativeModel({
+            const summaryModel = googleai.getGenerativeModel({
                 model: "gemma-3n-e4b-it",
                 generationConfig: {
                     temperature: 0.2,
@@ -44,17 +40,16 @@ export default {
             const summaryResult = await summaryModel.generateContent(
                 summaryPrompt
             );
-            threadName = summaryResult.response
-                .text()
-                .replace(/[*_~`>#\n\r]/g, "") // Strip markdown symbols and line breaks
-                .trim()
-                .slice(0, 80);
+            threadName =
+                summaryResult.response
+                    .text()
+                    ?.replace(/[*_~`>#\n\r]/g, "")
+                    .trim()
+                    .slice(0, 80) || `Kāru & ${message.author.username}`;
 
             if (!message.thread && message.channel?.type === 0) {
                 thread = await message.startThread({
-                    name: threadName
-                        ? `💭 ${threadName}`
-                        : `💭 Kāru & ${message.author.username}`,
+                    name: `💭 ${threadName}`,
                     autoArchiveDuration: 60,
                 });
             } else if (message.thread && isKaruThread) {
@@ -73,7 +68,6 @@ export default {
 
             chatThread.messages.push({ role: "user", content: cleanedPrompt });
 
-            const history = chatThread.messages.slice(-10);
             const historyText = history
                 .map(
                     (m) =>
@@ -84,24 +78,22 @@ export default {
             const systemPrompt = `
 You are Kāru — a friendly, emotionally intelligent AI companion that helps users solve problems, brainstorm ideas, and make better decisions.
 
-Your tone is kind, supportive, thoughtful, and honest — but never judgmental or harsh. You aim to help, not criticize. You listen deeply, then respond clearly and constructively.
+You reply in a **brief, clear, and actionable** way — max 4 sentences. Use plain language. Avoid repeating the user's input.
 
-Give actionable suggestions, clarify confusion, and make the user feel supported and empowered.
+Your tone is kind and supportive, but you always get to the point. Do not ramble.
 
-You never reveal internal model names or AI configuration (you are "Kāru", not Gemma or Gemini).
-
-User's message (reply in the same language): "${cleanedPrompt}"
+Never reveal internal model names or AI configuration (you are "Kāru", not Gemma or Gemini).
 `.trim();
 
             const fullPrompt = `${systemPrompt}\n${historyText}\nUser: ${cleanedPrompt}`;
 
-            const model = genAI.getGenerativeModel({
+            const model = googleai.getGenerativeModel({
                 model: "gemma-3n-e4b-it",
                 generationConfig: {
                     temperature: 0.2,
                     topK: 1,
                     topP: 1,
-                    maxOutputTokens: 2048,
+                    maxOutputTokens: 800,
                 },
             });
 
@@ -112,27 +104,24 @@ User's message (reply in the same language): "${cleanedPrompt}"
                 .replace(/^Kaeru[:,\s]*/i, "")
                 .replace(/^Kāru[:,\s]*/i, "")
                 .replace(/^Bot[:,\s]*/i, "")
-                .replace(/[*_~`>]/g, "")
-                .replace(/[\u{1F600}-\u{1F6FF}]/gu, "");
+                .replace(/[*_~`>]/g, "");
 
-            const container = new ContainerBuilder()
-                .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(
-                        `# ${emojis.intelligence} Kāru`
+            const textSection = new TextDisplayBuilder().setContent(
+                botResponse
+            );
+
+            const section = new SectionBuilder()
+                .addTextDisplayComponents(textSection)
+                .setThumbnailAccessory(
+                    new ThumbnailBuilder().setURL(
+                        "https://media.discordapp.net/attachments/736571695170584576/1375496934323781692/Karu.png?ex=6831e6d8&is=68309558&hm=a452446b47befa79174bbdebf602919b70398bb6bc38cd42070d5e7b6679fcc1&=&format=webp&quality=lossless&width=618&height=606"
                     )
-                )
-                .addSeparatorComponents(
-                    new SeparatorBuilder()
-                        .setSpacing(SeparatorSpacingSize.Small)
-                        .setDivider(true)
-                )
-                .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(botResponse)
                 );
 
-            await thread.send({
-                components: [container],
+            await message.reply({
+                components: [section],
                 flags: MessageFlags.IsComponentsV2,
+                allowedMentions: { repliedUser: false }, // <- No ping
             });
 
             chatThread.messages.push({ role: "model", content: botResponse });
