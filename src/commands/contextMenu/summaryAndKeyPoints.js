@@ -30,6 +30,11 @@ export default {
 
         const messageContent = interaction.options.getMessage("message");
 
+        if (!messageContent)
+            return interaction.editReply({
+                content: `${emojis.info} This message seems to hold no content—nothing to summarize.\n-# Embeded messages can't be summarized. Neither container messages.`,
+            });
+
         const prompt = `
       Summarize the following text into ONE clear, concise paragraph. Then list the KEY POINTS as bullet points. Do NOT add opinions or extra details.
 
@@ -86,7 +91,7 @@ export default {
         } catch (error) {
             console.error("❌ Failed to process summary:", error);
             await interaction.editReply({
-                content: `❌ Something went wrong while summarizing.`,
+                content: `${emojis.error} Something went wrong while summarizing.`,
             });
         }
     },

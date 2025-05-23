@@ -47,7 +47,7 @@ export default {
         try {
             if (!message.content)
                 return interaction.editReply({
-                    content: `${emojis.info} This message seems to hold no content—nothing to translate across the threads of time.`,
+                    content: `${emojis.info} This message seems to hold no content—nothing to translate across the threads of time. -# Message shouldn't be inside an embed or container.`,
                 });
 
             const locale = !["zh-CN", "zh-TW"].includes(interaction.locale)
