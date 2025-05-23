@@ -45,9 +45,13 @@ export default {
         const message = interaction.options.getMessage("message");
 
         try {
-            if (!message.content)
+            if (
+                !message ||
+                typeof message.content !== "string" ||
+                message.content.trim() === ""
+            )
                 return interaction.editReply({
-                    content: `${emojis.info} This message seems to hold no content—nothing to translate across the threads of time. -# Message shouldn't be inside an embed or container.`,
+                    content: `${emojis.info} This message seems to hold no content—nothing to translate so... this means nothing to translate. \n-# Message shouldn't be inside an embed or container telling it in case c:`,
                 });
 
             const locale = !["zh-CN", "zh-TW"].includes(interaction.locale)

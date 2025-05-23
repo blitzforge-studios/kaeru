@@ -28,12 +28,18 @@ export default {
     async execute({ interaction }) {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-        const messageContent = interaction.options.getMessage("message");
-
-        if (!messageContent)
+        const message = interaction.options.getMessage("message");
+        if (
+            !message ||
+            typeof message.content !== "string" ||
+            message.content.trim() === ""
+        ) {
             return interaction.editReply({
-                content: `${emojis.info} This message seems to hold no content—nothing to summarize.\n-# Embeded messages can't be summarized. Neither container messages.`,
+                content: `# ${emojis.info} \nEmbeds, attachments, or system messages etc. are not supported. Maybe copy the text from the message and paste it here?`,
             });
+        }
+
+        const messageContent = message.content.trim();
 
         const prompt = `
       Summarize the following text into ONE clear, concise paragraph. Then list the KEY POINTS as bullet points. Do NOT add opinions or extra details.
@@ -61,9 +67,13 @@ export default {
                     topK: 10,
                 },
             });
+            const result = await model.generateContent([prompt]);
 
-            const result = await model.generateContent(prompt);
-            const output = result.response.text().trim();
+            const output = result.response.text();
+
+            if (!output) {
+                throw new Error("No response text from model");
+            }
 
             const [summarySection, keyPointSection] = output
                 .split(/Key Points:\n?/i)
