@@ -28,11 +28,11 @@ export const emojis = {
 
     // issue labels
     label: {
-        bugLabel: "<:label_bug:1353798224481091595>",
-        rewardLabel: "<:label_reward:1353798275349745735>",
-        questionLabel: "<:label_question:1353798263119020082>",
-        discussionLabel: "<:label_discussion:1353798237475307571>",
-        helpLabel: "<:label_help:1353798248875167805>",
+        bugLabel: "<:label_bug:1375482268109377536>",
+        rewardLabel: "",
+        questionLabel: "<:label_question:1375482334232444988>",
+        discussionLabel: "<:label_discussion:1375482386183356446>",
+        helpLabel: "<:label_help:1375482474280255539>",
     },
 
     reactions: {
