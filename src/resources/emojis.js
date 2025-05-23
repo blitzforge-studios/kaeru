@@ -45,12 +45,12 @@ export const emojis = {
         reaction_question: "<:react_Question:1353817612525637734>",
 
         // user
-        reaction_heart_u: "<:reaction_heart_u:1353766045424422912>",
-        reaction_thumbsup_u: "<:reaction_thumbsup_u:1353766065750016021>",
-        reaction_thumbsdown_u: "<:reaction_thumbsdown_u:1353766081252167700>",
-        reaction_haha_u: "<:reaction_haha_u:1353766334357569537>",
-        reaction_emphasize_u: "<:reaction_emphasize_u:1353766349016530996>",
-        reaction_question_u: "<:reaction_question_u:1353766362622984344>",
+        reaction_heart_u: "<:reaction_heart_u:1375476629316567061>",
+        reaction_thumbsup_u: "<:reaction_thumbsup_u:1375476669149876234>",
+        reaction_thumbsdown_u: "<:reaction_thumbsdown_u:1375476654977319012>",
+        reaction_haha_u: "<:reaction_haha_u:1375476616611889212>",
+        reaction_emphasize_u: "<:reaction_emphasize_u:1375476602041012295>",
+        reaction_question_u: "<:reaction_question_u:1375476642104999999>",
     },
 
     // other
