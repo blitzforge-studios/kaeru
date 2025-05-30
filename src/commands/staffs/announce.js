@@ -193,9 +193,16 @@ export default {
         const container = new ContainerBuilder().setAccentColor(null);
         const files = [];
 
-        // Handle attachment
         if (attachment) {
-            if (attachment.contentType?.startsWith("image/")) {
+            const contentType = attachment.contentType || "";
+
+            if (contentType.startsWith("image/")) {
+                container.addMediaGalleryComponents(
+                    new MediaGalleryBuilder().addItems(
+                        new MediaGalleryItemBuilder().setURL(attachment.url)
+                    )
+                );
+            } else if (contentType.startsWith("video/")) {
                 container.addMediaGalleryComponents(
                     new MediaGalleryBuilder().addItems(
                         new MediaGalleryItemBuilder().setURL(attachment.url)
