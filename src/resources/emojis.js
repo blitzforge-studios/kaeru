@@ -7,7 +7,7 @@ export const emojis = {
     ticketClose: "<:close:1331654220230819921>",
     ticketReopen: "<:reopen:1331654349754994789>",
     ticketLock: "<:lock:1331654306599800902>",
-    ticketLockOpen: "<:lock_open:1331654295774433290>",
+    ticketLockOpen: "<:key:1378356324680859688>",
 
     // memes & nsfw
     brain: "<:brain:1331654195215859823>",
