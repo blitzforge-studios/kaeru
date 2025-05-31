@@ -16,8 +16,8 @@ import {
     FileBuilder,
     ButtonBuilder,
     ButtonStyle,
-    PermissionsBitField,
 } from "discord.js";
+import fetch from "node-fetch";
 import { checkBotPermissions } from "../../functions/checkPermissions.js";
 import { defaultAnnounceMessagePermissions } from "../../resources/BotPermissions.js";
 import { emojis } from "../../resources/emojis.js";
@@ -64,12 +64,15 @@ export default {
                     it: "messaggio",
                     tr: "mesaj",
                 })
-                .setDescription("Message of the announcement")
+                .setDescription(
+                    "Message of the announcement, for next line; use two or more spaces"
+                )
                 .setDescriptionLocalizations({
-                    "zh-CN": "公告的消息",
-                    it: "Messaggio dell'annuncio",
-                    tr: "Duyurunun mesajı",
+                    "zh-CN": "公告的消息，换行请使用两个或以上空格",
+                    it: "Messaggio dell'annuncio, per andare a capo usa due o più spazi",
+                    tr: "Duyurunun mesajı, yeni satır için iki veya daha fazla boşluk kullanın",
                 })
+
                 .setRequired(true)
         )
         .addStringOption((option) =>
@@ -180,7 +183,7 @@ export default {
         );
         if (!botHasPermission) return;
 
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        await interaction.deferReply();
 
         const attachment = interaction.options.getAttachment("attachment");
         const role = interaction.options.getRole("role");
@@ -191,32 +194,44 @@ export default {
             message3 = interaction.options.getString("message_3");
 
         const container = new ContainerBuilder().setAccentColor(null);
+
         const files = [];
 
         if (attachment) {
             const contentType = attachment.contentType || "";
 
-            if (contentType.startsWith("image/")) {
+            const response = await fetch(attachment.url);
+            if (!response.ok) {
+                await interaction.editReply({
+                    content: `${emojis.danger} Couldn't download the file, please upload a proper attachment.`,
+                });
+                return;
+            }
+
+            const arrayBuffer = await response.arrayBuffer();
+            const fileBuffer = Buffer.from(arrayBuffer);
+
+            if (
+                contentType.startsWith("image/") ||
+                contentType.startsWith("video/")
+            ) {
                 container.addMediaGalleryComponents(
                     new MediaGalleryBuilder().addItems(
-                        new MediaGalleryItemBuilder().setURL(attachment.url)
-                    )
-                );
-            } else if (contentType.startsWith("video/")) {
-                container.addMediaGalleryComponents(
-                    new MediaGalleryBuilder().addItems(
-                        new MediaGalleryItemBuilder().setURL(attachment.url)
+                        new MediaGalleryItemBuilder().setURL(
+                            `attachment://${attachment.name}`
+                        )
                     )
                 );
             } else {
                 container.addFileComponents(
                     new FileBuilder().setURL(`attachment://${attachment.name}`)
                 );
-                files.push({
-                    attachment: attachment.url,
-                    name: attachment.name,
-                });
             }
+
+            files.push({
+                attachment: fileBuffer,
+                name: attachment.name,
+            });
         }
 
         // Add separator and message content
@@ -294,12 +309,18 @@ export default {
                     reason: `${interaction.user.username} created a thread for announcement`,
                 });
 
-                await sentMessage.react(emojis.reactions.reaction_heart_u);
-                await sentMessage.react(emojis.reactions.reaction_thumbsup_u);
-                await sentMessage.react(emojis.reactions.reaction_thumbsdown_u);
-                await sentMessage.react(emojis.reactions.reaction_haha_u);
-                await sentMessage.react(emojis.reactions.reaction_emphasize_u);
-                await sentMessage.react(emojis.reactions.reaction_question_u);
+                const reactions = [
+                    emojis.reactions.reaction_heart_u,
+                    emojis.reactions.reaction_thumbsup_u,
+                    emojis.reactions.reaction_thumbsdown_u,
+                    emojis.reactions.reaction_haha_u,
+                    emojis.reactions.reaction_emphasize_u,
+                    emojis.reactions.reaction_question_u,
+                ];
+
+                for (const reaction of reactions) {
+                    await sentMessage.react(reaction);
+                }
 
                 await interaction.editReply({
                     content: italic(`Done! Announcement sent to ${channel}!`),
