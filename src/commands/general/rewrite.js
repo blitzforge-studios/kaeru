@@ -3,8 +3,6 @@ import {
     ApplicationIntegrationType,
     InteractionContextType,
     MessageFlags,
-    TextDisplayBuilder,
-    SeparatorBuilder,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,

@@ -63,6 +63,7 @@ export const emojis = {
     doorEnter: "<:door_enter:1331678912866156595>",
     swap: "<:swap:1331704952833179780>",
     globe: "<:globe:1331705467839320074>",
+    dnd: "<:dnd:1378835964197076992>",
 
     // AI
     intelligence: "<:Karu:1375522815549116566>",
