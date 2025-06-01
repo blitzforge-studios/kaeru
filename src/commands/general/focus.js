@@ -120,7 +120,7 @@ export default {
                         type: AutoModerationActionType.BlockMessage,
                         metadata: {
                             customMessage:
-                                "⎾ This user is currently focusing. Please do not disturb.",
+                                "⏾⋆.˚ This user is currently focusing. Please do not disturb.",
                         },
                     },
                 ],
