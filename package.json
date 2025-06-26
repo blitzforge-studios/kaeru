@@ -2,11 +2,12 @@
     "name": "kaeru",
     "version": "2.3.1",
     "description": "A Discord bot is doing unique things.",
-    "main": "index.js",
+    "main": "dist/index.js",
     "type": "module",
     "scripts": {
-        "start": "npm install && npm update && node index.js",
-        "dev": "node index.js"
+        "build": "tsc",
+        "start": "npm run build && node dist/index.js",
+        "dev": "ts-node index.ts"
     },
     "repository": {
         "type": "git",
@@ -35,5 +36,10 @@
         "moment-timezone": "^0.6.0",
         "mongoose": "^8.10.1",
         "node-fetch": "^3.3.2"
+    },
+    "devDependencies": {
+        "@types/node": "^20.11.21",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.3.3"
     }
 }
