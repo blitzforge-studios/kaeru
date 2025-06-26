@@ -22,7 +22,7 @@ export default {
             ro: "Banner Utilizator",
             el: "Σημαιάκι Χρήστη",
             "pt-BR": "Banner do Usuário",
-            ChineseCN: "用户横幅",
+            "zh-CN": "用户横幅",
         })
         .setType(ApplicationCommandType.User)
         .setIntegrationTypes([
@@ -43,7 +43,8 @@ export default {
         try {
             if (
                 Object.keys(interaction.authorizingIntegrationOwners).every(
-                    (key) => key == ApplicationIntegrationType.UserInstall
+                    (key) =>
+                        Number(key) === ApplicationIntegrationType.UserInstall
                 )
             ) {
                 await interaction.deferReply({ flags: MessageFlags.Ephemeral });

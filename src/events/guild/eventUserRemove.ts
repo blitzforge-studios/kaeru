@@ -3,7 +3,7 @@ import { Events } from "discord.js";
 export default {
     name: Events.GuildScheduledEventUserRemove,
     once: false,
-    execute: async (guildScheduledEvent, user) => {
+    execute: async (guildScheduledEvent: any, user: any) => {
         // try {
         //     await UserForScheduledEvents.deleteOne({
         //         userId: user.id,

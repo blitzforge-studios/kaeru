@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export default {
     name: "mongoConnect",
     once: true,
-    async execute(_client) {
+    async execute(_client: any) {
         const mongoURI = process.env.MONGO_URI;
         if (!mongoURI) {
             console.error("❌ MONGO_URI is missing in the .env file!");

@@ -21,7 +21,7 @@ export default {
             tr: "Mesajı Çevir",
             ro: "Traduceți Mesajul",
             el: "Μετάφραση Μηνύματος",
-            ChineseCN: "翻译消息",
+            "zh-CN": "翻译消息",
             "pt-BR": "Traduzir Mensagem",
         })
         .setType(ApplicationCommandType.Message)

@@ -22,7 +22,8 @@ export default {
             .setPlaceholder("Cannot post memes")
             .setMinLength(5)
             .setMaxLength(80);
-        const firstActionRow = new ActionRowBuilder().addComponents(input);
+        const firstActionRow =
+            new ActionRowBuilder<TextInputBuilder>().addComponents(input);
 
         modal.addComponents(firstActionRow);
 

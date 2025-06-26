@@ -5,9 +5,9 @@ import { emojis } from "../../resources/emojis.js";
 export default {
     name: Events.GuildMemberAdd,
     once: false,
-    execute: async (member) => {
+    execute: async (member: any) => {
         const guild = member.guild;
-        const accountAge = new Date() - member.user.createdTimestamp;
+        const accountAge = Date.now() - member.user.createdTimestamp;
         const oneDayInMillis = 1000 * 60 * 60 * 24;
         const sevenDaysInMillis = oneDayInMillis * 7;
         const channelId = (await checkLoggingChannel(guild.id)) || null;
@@ -24,7 +24,7 @@ export default {
                             .setDescription(
                                 "You might be questioning why are you timeouted...\nWell, since your account is younger than 7 days, I have restricted you temporarily."
                             )
-                            .setColor(process.env.EMBED_COLOR)
+                            .setColor(process.env.EMBED_COLOR! as any)
                             .setThumbnail(guild.iconURL())
                             .setTimestamp(),
                     ],
@@ -36,7 +36,7 @@ export default {
                         `User <@${member.user.id}> (${member.user.username}) has joined the server. Their account is younger than 7 days. They have been temporarily restricted. Aka they are timeouted for one week.`
                     )
                     .setThumbnail(member.user.displayAvatarURL())
-                    .setColor(process.env.EMBED_COLOR)
+                    .setColor(process.env.EMBED_COLOR! as any)
                     .setFooter({
                         text: guild.name,
                         iconURL: guild.iconURL(),

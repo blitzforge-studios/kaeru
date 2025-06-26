@@ -1,5 +1,12 @@
 import mongoose from "mongoose";
 
+type GuildDoc = mongoose.Document & {
+    guildId: string;
+    staffRoleId?: string;
+    loggingChannelId?: string;
+    warnings: Map<string, number>;
+};
+
 const guildSchema = new mongoose.Schema({
     guildId: { type: String, required: true, unique: true },
     staffRoleId: { type: String, default: null },
@@ -10,7 +17,7 @@ const guildSchema = new mongoose.Schema({
 const Guild = mongoose.model("Guild", guildSchema);
 
 // Staff Role
-export async function saveStaffRoleId(guildId, roleId) {
+export async function saveStaffRoleId(guildId: string, roleId: string) {
     await Guild.findOneAndUpdate(
         { guildId },
         { staffRoleId: roleId },
@@ -18,25 +25,29 @@ export async function saveStaffRoleId(guildId, roleId) {
     );
 }
 
-export async function getStaffRoleId(guildId) {
+export async function getStaffRoleId(guildId: string) {
     const guild = await Guild.findOne({ guildId });
     return guild?.staffRoleId || null;
 }
 
 // Warning System
-export async function addWarning(guildId, userId) {
-    const update = { $inc: {} };
+export async function addWarning(guildId: string, userId: string) {
+    const update: { $inc: Record<string, number> } = { $inc: {} };
     update.$inc[`warnings.${userId}`] = 1;
 
-    const guild = await Guild.findOneAndUpdate({ guildId }, update, {
-        upsert: true,
-        new: true,
-    });
+    const guild = (await Guild.findOneAndUpdate(
+        { guildId },
+        update,
+        {
+            upsert: true,
+            new: true,
+        }
+    )) as GuildDoc;
 
-    return guild.warnings[userId] || 0;
+    return guild.warnings.get(userId) || 0;
 }
 
-export async function checkWarnings(guildId, userId) {
+export async function checkWarnings(guildId: string, userId: string) {
     try {
         const guild = await Guild.findOne({ guildId });
         if (!guild || !guild.warnings) return 0;
@@ -48,7 +59,10 @@ export async function checkWarnings(guildId, userId) {
 }
 
 // Logging Channel
-export async function setupLoggingChannel(guildId, channelId) {
+export async function setupLoggingChannel(
+    guildId: string,
+    channelId: string
+) {
     await Guild.findOneAndUpdate(
         { guildId },
         { loggingChannelId: channelId },
@@ -56,7 +70,7 @@ export async function setupLoggingChannel(guildId, channelId) {
     );
 }
 
-export async function checkLoggingChannel(guildId) {
+export async function checkLoggingChannel(guildId: string) {
     const guild = await Guild.findOne({ guildId });
     return guild?.loggingChannelId || null;
 }

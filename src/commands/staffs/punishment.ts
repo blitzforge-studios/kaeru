@@ -27,7 +27,7 @@ export default {
             "pt-BR": "punição",
             ro: "pedepsire",
             el: "τιμωρία",
-            ChineseCN: "惩罚",
+            "zh-CN": "惩罚",
             it: "punizione",
             tr: "ceza",
         })

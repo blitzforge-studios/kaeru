@@ -20,7 +20,9 @@ const __dirname = path.dirname(__filename);
  * @returns {Promise<void>} Resolves when all components are successfully loaded.
  * @author İbrahim Güneş
  */
-export const componentHandler = async (client) => {
+import type { ExtendedClient } from "../types/ExtendedClient.js";
+
+export const componentHandler = async (client: ExtendedClient) => {
     try {
         // Get all folders inside the 'components' directory
         const componentFolders = fs.readdirSync(

@@ -5,7 +5,7 @@ import { botPresence } from "../../config/Configs.js";
 export default {
     name: Events.ClientReady,
     once: true,
-    execute: async (client) => {
+    execute: async (client: any) => {
         client.user.setPresence(botPresence);
         console.log(chalk.green(`[READY] Logged in as ${client.user.tag}!`));
 

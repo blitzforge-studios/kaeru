@@ -17,7 +17,7 @@ export default {
             ro: "meme",
             el: "μεμέ",
             "pt-BR": "meme",
-            ChineseCN: "梗图",
+            "zh-CN": "梗图",
         })
         .setDescriptionLocalizations({
             tr: "Cebimden gelen mimler",
@@ -25,7 +25,7 @@ export default {
             el: "Μεμέδες από την τσέπη μου",
             ro: "Meme-uri din buzunarul meu",
             "pt-BR": "Memês do meu bolso",
-            ChineseCN: "口袋里的梗图",
+            "zh-CN": "口袋里的梗图",
         })
         .setIntegrationTypes([
             ApplicationIntegrationType.UserInstall,

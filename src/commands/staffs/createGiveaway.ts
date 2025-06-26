@@ -10,6 +10,7 @@ import {
     ApplicationIntegrationType,
     InteractionContextType,
     underline,
+    type User,
 } from "discord.js";
 import {
     timezoneChecking,
@@ -26,7 +27,7 @@ export default {
         .setNameLocalizations({
             tr: "çekiliş-oluştur",
             it: "crea-concorso",
-            ChineseCN: "创建抽奖",
+            "zh-CN": "创建抽奖",
             el: "δημιουργία-διαγωνισμού",
             "pt-BR": "criar-sorteio",
             ro: "creează-tombolă",
@@ -34,7 +35,7 @@ export default {
         .setDescriptionLocalizations({
             tr: "Bir çekiliş oluşturun",
             it: "Crea un concorso",
-            ChineseCN: "创建抽奖活动",
+            "zh-CN": "创建抽奖活动",
             el: "Δημιουργήστε έναν διαγωνισμό",
             "pt-BR": "Crie um sorteio",
             ro: "Creează o tombolă",
@@ -333,17 +334,17 @@ export default {
                             .scheduledEvents.cache.get(giveaway.id)
                             .fetchSubscribers();
 
-                        let winner = "";
+                        let winner: User | string = "";
                         let description = "";
                         if (subscribers.size > 0) {
                             const subscriberUsernames = Array.from(
                                 subscribers.values()
-                            ).map((subscriber) => subscriber.user);
+                            ).map((subscriber: any) => subscriber.user as User);
 
                             const shuffledUsernames =
                                 shuffleSubscribers(subscriberUsernames);
 
-                            winner = shuffledUsernames[0];
+                            winner = shuffledUsernames[0] as User;
                             description = `a winner! ${
                                 emojis.giftCard
                             }\n${userMention(

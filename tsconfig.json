@@ -6,6 +6,7 @@
     "outDir": "dist",
     "rootDir": ".",
     "esModuleInterop": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "resolveJsonModule": true

@@ -4,7 +4,7 @@ import chalk from "chalk";
 export default {
     name: Events.GuildScheduledEventUserAdd,
     once: false,
-    async execute(guildScheduledEvent, user) {
+    async execute(guildScheduledEvent: any, user: any) {
         //     // Check if user already joined this event (avoiding duplicates)
         //     const existingUser = await UserForScheduledEvents.findOne({
         //         userId: user.id,

@@ -20,7 +20,7 @@ export default {
             tr: "Hızlı Talep Formu",
             ro: "Bilet Rapid",
             el: "Γρήγορο Εισιτήριο",
-            ChineseCN: "快速票证",
+            "zh-CN": "快速票证",
             "pt-BR": "Ingresso Rápido",
         })
         .setType(ApplicationCommandType.Message)

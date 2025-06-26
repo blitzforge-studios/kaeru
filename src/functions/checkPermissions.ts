@@ -1,7 +1,13 @@
-import { MessageFlags, PermissionFlagsBits, EmbedBuilder } from "discord.js";
+import {
+    MessageFlags,
+    PermissionFlagsBits,
+    EmbedBuilder,
+    type PermissionResolvable,
+    type GuildBasedChannel,
+} from "discord.js";
 import { emojis } from "../resources/emojis.js";
 
-function hasRequiredPermissions(interaction, permission) {
+function hasRequiredPermissions(interaction: any, permission: PermissionResolvable) {
     if (!interaction.guild) return false;
 
     const botMember = interaction.guild.members.cache.get(
@@ -19,11 +25,11 @@ function hasRequiredPermissions(interaction, permission) {
 }
 
 export const checkBotPermissions = async (
-    interaction,
-    permissions,
+    interaction: any,
+    permissions: { permission: PermissionResolvable; errorMessage?: string }[],
     customMessage = "",
-    targetChannel = null
-) => {
+    targetChannel: GuildBasedChannel | null = null
+): Promise<boolean> => {
     try {
         const contextToCheck = targetChannel
             ? {
@@ -39,8 +45,13 @@ export const checkBotPermissions = async (
             );
 
             if (!hasPermission) {
-                const permissionName = Object.keys(PermissionFlagsBits).find(
-                    (key) => PermissionFlagsBits[key] === permission
+                const permissionMap =
+                    PermissionFlagsBits as unknown as Record<
+                        string,
+                        PermissionResolvable
+                    >;
+                const permissionName = (Object.keys(permissionMap) as string[]).find(
+                    (key) => permissionMap[key] === permission
                 );
 
                 const channelInfo = targetChannel
@@ -82,10 +93,10 @@ export const checkBotPermissions = async (
 };
 
 export const checkMemberPermissions = async (
-    interaction,
-    permissions,
+    interaction: any,
+    permissions: { permission: PermissionResolvable; errorMessage?: string }[],
     customMessage = ""
-) => {
+): Promise<boolean> => {
     try {
         if (!interaction.guild || !interaction.member) return false;
 
@@ -94,8 +105,13 @@ export const checkMemberPermissions = async (
                 interaction.member.permissions.has(permission);
 
             if (!hasMemberPermission) {
-                const permissionName = Object.keys(PermissionFlagsBits).find(
-                    (key) => PermissionFlagsBits[key] === permission
+                const permissionMap =
+                    PermissionFlagsBits as unknown as Record<
+                        string,
+                        PermissionResolvable
+                    >;
+                const permissionName = (Object.keys(permissionMap) as string[]).find(
+                    (key) => permissionMap[key] === permission
                 );
 
                 const embed = new EmbedBuilder()

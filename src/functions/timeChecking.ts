@@ -1,4 +1,4 @@
-function timezoneChecking(timezone) {
+export function timezoneChecking(timezone: string) {
     switch (timezone) {
         case "zh-CN":
             return "Asia/Shanghai";
@@ -27,7 +27,7 @@ function timezoneChecking(timezone) {
     }
 }
 
-function timeChecking(duration) {
+export function timeChecking(duration: string) {
     switch (duration) {
         case "1m":
             return 60;
@@ -56,4 +56,3 @@ function timeChecking(duration) {
     }
 }
 
-export { timezoneChecking, timeChecking };

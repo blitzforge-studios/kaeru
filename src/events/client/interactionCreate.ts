@@ -3,7 +3,7 @@ import { Events, InteractionType } from "discord.js";
 export default {
     name: Events.InteractionCreate,
     once: false,
-    execute: async (interaction, client) => {
+    execute: async (interaction: any, client: any) => {
         if (interaction.isChatInputCommand()) {
             const { commands } = client;
             const { commandName } = interaction;

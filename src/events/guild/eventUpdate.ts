@@ -3,7 +3,7 @@ import { Events, GuildScheduledEventStatus } from "discord.js";
 export default {
     name: Events.GuildScheduledEventUpdate,
     once: false,
-    execute: async (oldGuildScheduledEvent, newGuildScheduledEvent) => {
+    execute: async (oldGuildScheduledEvent: any, newGuildScheduledEvent: any) => {
         // Checking if the event was initiated by the bot
         if (
             newGuildScheduledEvent.guild.client.user.id ===

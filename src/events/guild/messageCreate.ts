@@ -5,7 +5,7 @@ import { emojis } from "../../resources/emojis.js";
 
 export default {
     name: Events.MessageCreate,
-    async execute(message) {
+    async execute(message: any) {
         if (message.author.bot) return;
 
         const isKaruThread =
@@ -72,7 +72,7 @@ export default {
     },
 };
 
-async function handleKaruMessage(message, channel, userPrompt) {
+async function handleKaruMessage(message: any, channel: any, userPrompt: any) {
     try {
         if (!userPrompt) return;
 

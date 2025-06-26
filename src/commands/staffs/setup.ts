@@ -31,7 +31,7 @@ export default {
         .setNameLocalizations({
             tr: "kur",
             it: "impostare",
-            ChineseCN: "设置",
+            "zh-CN": "设置",
         })
         .setDescription("Setup things!")
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
@@ -106,7 +106,7 @@ export default {
                     option
                         .setName("image")
                         .setNameLocalizations({
-                            ChineseCN: "图片",
+                            "zh-CN": "图片",
                             it: "immagine",
                             tr: "resim",
                             "pt-BR": "imagem",
@@ -117,7 +117,7 @@ export default {
                             "Upload your own banner for ticket message!"
                         )
                         .setDescriptionLocalizations({
-                            ChineseCN: "为工单消息上传您自己的图片！",
+                            "zh-CN": "为工单消息上传您自己的图片！",
                             it: "Carica la tua immagine per il messaggio del ticket!",
                             tr: "Ticket mesajı için kendi resminizi yükleyin!",
                             "pt-BR":

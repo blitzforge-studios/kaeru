@@ -1,4 +1,10 @@
-import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
+import {
+    Client,
+    Collection,
+    GatewayIntentBits,
+    Partials,
+} from "discord.js";
+import type { ExtendedClient } from "../types/ExtendedClient.js";
 
 export const client = new Client({
     intents: [
@@ -9,7 +15,7 @@ export const client = new Client({
         GatewayIntentBits.GuildScheduledEvents,
     ],
     partials: [Partials.GuildMember, Partials.Message, Partials.Channel],
-});
+}) as ExtendedClient;
 
 client.commands = new Collection();
 client.buttons = new Collection();

@@ -22,7 +22,7 @@ export default {
             ro: "Avatar Utilizator",
             el: "Άβαταρ Χρήστη",
             "pt-BR": "Avatar do Usuário",
-            ChineseCN: "用户头像",
+            "zh-CN": "用户头像",
         })
         .setType(ApplicationCommandType.User)
         .setIntegrationTypes([
@@ -42,7 +42,7 @@ export default {
 
         if (
             Object.keys(interaction.authorizingIntegrationOwners).every(
-                (key) => key == ApplicationIntegrationType.UserInstall
+                (key) => Number(key) === ApplicationIntegrationType.UserInstall
             )
         ) {
             await interaction.deferReply({ flags: MessageFlags.Ephemeral });

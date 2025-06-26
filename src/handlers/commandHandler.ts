@@ -28,7 +28,9 @@ const __dirname = path.dirname(__filename);
  * @returns {Promise<void>} Resolves when all commands are loaded and registered successfully.
  * @author İbrahim Güneş
  */
-export const commandHandler = async (client) => {
+import type { ExtendedClient } from "../types/ExtendedClient.js";
+
+export const commandHandler = async (client: ExtendedClient) => {
     try {
         // Get all the command files from the 'commands' directory, including subfolders
         const commandFolders = await fs.readdir(
@@ -77,7 +79,7 @@ export const commandHandler = async (client) => {
 
         // Create a REST client and set the bot token
         const rest = new REST({ version: "10" }).setToken(
-            process.env.CLIENT_TOKEN
+            process.env.CLIENT_TOKEN!
         );
 
         // Check if the token is set correctly
@@ -95,7 +97,7 @@ export const commandHandler = async (client) => {
         );
 
         // Register commands with the Discord API
-        await rest.put(Routes.applicationCommands(clientId), {
+        await rest.put(Routes.applicationCommands(clientId!), {
             body: client.commandArray,
         });
 

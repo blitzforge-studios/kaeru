@@ -61,7 +61,7 @@ export default {
                     .setCustomId("ticket-close-modal")
                     .setTitle("Close Ticket")
                     .addComponents(
-                        new ActionRowBuilder().addComponents(
+                        new ActionRowBuilder<TextInputBuilder>().addComponents(
                             new TextInputBuilder()
                                 .setCustomId("close-reason")
                                 .setLabel("Reason for closing")

@@ -6,7 +6,7 @@ import { lockButtonRow } from "../../resources/buttons.js";
 export default {
     name: Events.ThreadUpdate,
     once: false,
-    execute: async (oldThread, newThread) => {
+    execute: async (oldThread: any, newThread: any) => {
         if (newThread.ownerId !== newThread.client.user.id) return;
         if (oldThread.archived && newThread.locked) return;
 

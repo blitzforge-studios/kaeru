@@ -19,7 +19,9 @@ const __dirname = path.dirname(__filename);
  * @returns {Promise<void>} Resolves when all events are successfully loaded.
  * @author İbrahim Güneş
  */
-export const eventHandler = async (client) => {
+import type { ExtendedClient } from "../types/ExtendedClient.js";
+
+export const eventHandler = async (client: ExtendedClient) => {
     try {
         // Get all folders inside the 'events' directory
         const eventFolders = fs.readdirSync(path.join(__dirname, "../events"));
@@ -52,11 +54,11 @@ export const eventHandler = async (client) => {
 
                 // Register the event (either one-time or recurring)
                 if (event.once) {
-                    client.once(event.name, (...args) =>
+                    client.once(event.name, (...args: unknown[]) =>
                         event.execute(...args, client)
                     );
                 } else {
-                    client.on(event.name, (...args) =>
+                    client.on(event.name, (...args: unknown[]) =>
                         event.execute(...args, client)
                     );
                 }
