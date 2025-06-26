@@ -1,4 +1,9 @@
-import { MessageFlags, SlashCommandBuilder } from "discord.js";
+import {
+    ApplicationIntegrationType,
+    InteractionContextType,
+    MessageFlags,
+    SlashCommandBuilder,
+} from "discord.js";
 import { googleai } from "../../config/Configs.js";
 import { emojis } from "../../resources/emojis.js";
 
@@ -20,6 +25,15 @@ export default {
             "pt-BR": "Pergunte à IA",
             ru: "Задай вопрос ИИ",
         })
+        .setIntegrationTypes([
+            ApplicationIntegrationType.UserInstall,
+            ApplicationIntegrationType.GuildInstall,
+        ])
+        .setContexts([
+            InteractionContextType.BotDM,
+            InteractionContextType.PrivateChannel,
+            InteractionContextType.Guild,
+        ])
         .addStringOption((option) =>
             option
                 .setName("question")
