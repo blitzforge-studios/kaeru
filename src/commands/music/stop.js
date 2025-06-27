@@ -17,14 +17,13 @@ export default {
         .setContexts([InteractionContextType.Guild]),
 
     async execute({ interaction }) {
-        const connection = interaction.guild ? interaction.guild.id : null;
-        if (!connection) {
+        const didStop = stop(interaction.guildId);
+        if (!didStop) {
             return interaction.reply({
                 content: `${emojis.error} Nothing is playing.`,
                 flags: MessageFlags.Ephemeral,
             });
         }
-        stop(connection);
         return interaction.reply({
             content: `${emojis.reactions.reaction_thumbsup} Stopped playback.`,
             flags: MessageFlags.Ephemeral,

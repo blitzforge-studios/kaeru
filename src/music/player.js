@@ -15,16 +15,21 @@ async function playNext(guildId) {
 
     const song = queue.songs[0];
     try {
-        const ytInfo = await play.search(song.query, { limit: 1 });
-        if (!ytInfo.length) {
-            song.interaction.followUp({ content: `${song.emojis.error} Couldn't find song.` });
-            queue.songs.shift();
-            return playNext(guildId);
+        let url = song.query;
+        if (!play.yt_validate(url)) {
+            const results = await play.search(url, { limit: 1 });
+            if (!results.length || !results[0].url) {
+                song.interaction.followUp({ content: `${song.emojis.error} Couldn't find song.` });
+                queue.songs.shift();
+                return playNext(guildId);
+            }
+            url = results[0].url;
         }
-        const stream = await play.stream(ytInfo[0].url);
-        const resource = createAudioResource(stream.stream, { inputType: stream.type ?? StreamType.Opus } );
+
+        const stream = await play.stream(url);
+        const resource = createAudioResource(stream.stream, { inputType: stream.type ?? StreamType.Opus });
         queue.player.play(resource);
-        song.interaction.followUp({ content: `${song.emojis.magic} Now playing **${ytInfo[0].title}**` });
+        song.interaction.followUp({ content: `${song.emojis.magic} Now playing **${stream.title ?? url}**` });
     } catch (err) {
         console.error('Play error:', err);
         song.interaction.followUp({ content: `${song.emojis.error} Could not play the requested song.` });
@@ -66,5 +71,7 @@ export function stop(guildId) {
         queue.player.stop(true);
         queue.connection.destroy();
         queues.delete(guildId);
+        return true;
     }
+    return false;
 }
