@@ -68,7 +68,10 @@ export default {
                 },
             });
             const result = await model.generateContent(prompt);
-            const output = result.response.text().trim();
+            let output = result.response.text().trim();
+            if (output.length > 2000) {
+                output = output.slice(0, 1997) + "...";
+            }
             await interaction.editReply(output);
         } catch (error) {
             console.error(error);
