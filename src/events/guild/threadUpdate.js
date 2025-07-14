@@ -11,6 +11,10 @@ export default {
         if (oldThread.archived && newThread.locked) return;
 
         const formattedTime = time(new Date(), "R");
+        const botMember = await newThread.guild.members.fetch(
+            newThread.client.user.id,
+        );
+        if (!botMember.permissions.has("ViewAuditLog")) return;
         const auditLogs = await newThread.guild.fetchAuditLogs({
             type: AuditLogEvent.ThreadUpdate,
         });
