@@ -1,6 +1,6 @@
 {
 	"name": "kaeru",
-	"version": "3.0.0",
+	"version": "2.3.1",
 	"description": "A Discord bot is doing unique things.",
 	"main": "dist/index.js",
 	"type": "module",
