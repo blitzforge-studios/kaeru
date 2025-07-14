@@ -6,8 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsc",
-		"start": "npm run build && node dist/index.js",
-		"dev": "npm run build && node --use-system-ca dist/index.js"
+		"start": "npm run build && node dist/index.js"
 	},
 	"repository": {
 		"type": "git",
