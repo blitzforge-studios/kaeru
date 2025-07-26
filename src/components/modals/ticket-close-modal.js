@@ -1,4 +1,13 @@
-import { time, EmbedBuilder } from "discord.js";
+import {
+	time,
+	EmbedBuilder,
+	ContainerBuilder,
+	TextDisplayBuilder,
+	SeparatorSpacingSize,
+	SeparatorBuilder,
+	MessageFlags,
+	SectionBuilder,
+} from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 
 export default {
@@ -13,16 +22,34 @@ export default {
 		const formattedTime = time(new Date(), "R");
 
 		await interaction.reply({
-			content: `${emojis.ticketClose} **${interaction.user.username}** __force closed__ this thread as completed at ${formattedTime}`,
-			embeds: [
-				new EmbedBuilder()
-					.setAuthor({
-						name: `${interaction.user.username} commented`,
-						iconURL: interaction.user.displayAvatarURL(),
-					})
-					.setColor(0xff3500)
-					.setDescription(closeReason),
+			components: [
+				new TextDisplayBuilder().setContent(
+					`# ${emojis.ticket.bubble.close}`,
+				),
+				new SeparatorBuilder()
+					.setSpacing(SeparatorSpacingSize.Small)
+					.setDivider(true),
+				new TextDisplayBuilder().setContent(
+					`-# **<@!${interaction.user.id}>** has __force closed__ the thread as completed ${formattedTime}`,
+				),
+				new ContainerBuilder()
+					.addSectionComponents(
+						new SectionBuilder()
+							.addTextDisplayComponents(
+								new TextDisplayBuilder().setContent(
+									closeReason,
+								),
+							)
+							.setThumbnailAccessory(
+								interaction.user.displayAvatarURL(),
+							),
+					)
+					.setAccentColor(0xff3500),
 			],
+			flags: MessageFlags.IsComponentsV2,
+			allowedMentions: {
+				parse: [],
+			},
 		});
 
 		await interaction.channel.setLocked(true);
