@@ -37,11 +37,6 @@ export default {
 		]),
 
 	execute: async ({ interaction }) => {
-		if (interaction.inGuild()) {
-			if (!(await checkBotPermissions(interaction, basePermissions)))
-				return;
-		}
-
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		const message = interaction.options.getMessage("message");
