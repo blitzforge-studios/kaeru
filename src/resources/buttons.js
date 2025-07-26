@@ -8,6 +8,16 @@ let lockButton = new ButtonBuilder()
 	.setDisabled(false)
 	.setEmoji(emojis.ticket.bubble.lock);
 
-const lockButtonRow = new ActionRowBuilder().addComponents(lockButton);
+let karuButton = new ButtonBuilder()
+	.setCustomId("karu-button")
+	.setLabel("Kāru AI (Beta)")
+	.setStyle(ButtonStyle.Secondary)
+	.setDisabled(false)
+	.setEmoji(emojis.intelligence);
+
+const lockButtonRow = new ActionRowBuilder().addComponents(
+	lockButton,
+	karuButton,
+);
 
 export { lockButtonRow };
