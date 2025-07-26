@@ -1,73 +1,90 @@
-import { AuditLogEvent, Events, time } from "discord.js";
-import { row3 } from "../../components/selectMenus/ticket-select-menu-states.js";
+import {
+	AuditLogEvent,
+	Events,
+	MessageFlags,
+	SeparatorBuilder,
+	SeparatorSpacingSize,
+	TextDisplayBuilder,
+	time,
+} from "discord.js";
 import { emojis } from "../../resources/emojis.js";
-import { lockButtonRow } from "../../resources/buttons.js";
 
 export default {
 	name: Events.ThreadUpdate,
 	once: false,
-	execute: async (oldThread, newThread) => {
-		if (newThread.ownerId !== newThread.client.user.id) return;
-		if (oldThread.archived && newThread.locked) return;
 
-		const formattedTime = time(new Date(), "R");
+	execute: async (oldThread, newThread) => {
+		// Ignore if this isn't the bot's thread
+		if (newThread.ownerId !== newThread.client.user.id) return;
+
+		// Fetch executor from audit log
 		const botMember = await newThread.guild.members.fetch(
 			newThread.client.user.id,
 		);
 		if (!botMember.permissions.has("ViewAuditLog")) return;
+
 		const auditLogs = await newThread.guild.fetchAuditLogs({
 			type: AuditLogEvent.ThreadUpdate,
 		});
 		const auditLog = auditLogs.entries.first();
-
 		if (!auditLog) return;
 
 		const { executor } = auditLog;
+		if (executor.id === newThread.client.user.id) return; // ignore bot actions
 
-		if (oldThread.archived && !newThread.archived && newThread.locked) {
-			if (executor.id === newThread.client.user.id) return;
+		const formattedTime = time(new Date(), "R");
 
+		// Helper: sends message
+		const sendMessage = async (emoji, text) => {
 			await newThread.send({
-				content: `${emojis.ticketLockOpen} **${executor.username}** has __unlocked__ the thread, but it is **staffs only** ${formattedTime}`,
+				components: [
+					new TextDisplayBuilder().setContent(`# ${emoji}`),
+					new TextDisplayBuilder().setContent(
+						`-# **<@!${executor.id}>** ${text} ${formattedTime}`,
+					),
+					new SeparatorBuilder()
+						.setSpacing(SeparatorSpacingSize.Small)
+						.setDivider(true),
+				],
+				flags: MessageFlags.IsComponentsV2,
+				allowedMentions: { parse: [] },
 			});
-		} else if (oldThread.archived && !newThread.archived) {
-			if (executor.id === newThread.client.user.id) return;
+		};
 
-			await newThread.send({
-				content: `${emojis.ticketReopen} **${executor.username}** __re-opened__ this thread ${formattedTime}`,
-			});
-
-			const pinnedMessages = await newThread.messages.fetchPinned();
-			const pinnedMessage = pinnedMessages.first();
-
-			if (pinnedMessage) {
-				await pinnedMessage.edit({
-					components: [row3, lockButtonRow],
-				});
-			} else {
-				return;
-				// const messages = await newThread.messages.fetch();
-				// const message = messages.first();
-				//
-				// if (message) {
-				//     await message.edit({
-				//         components: [row3, lockButtonRow],
-				//     });
-				// }
-			}
+		// === UNLOCKED ===
+		if (oldThread.locked && !newThread.locked) {
+			await sendMessage(
+				emojis.ticket.bubble.key,
+				"has __unlocked__ the thread",
+			);
 		}
 
-		if (oldThread.locked && !newThread.locked) {
-			await newThread.send({
-				content: `${emojis.ticketLockOpen} **${executor.username}** __unlocked__ this thread ${formattedTime}`,
-			});
-		} else if (!oldThread.locked && newThread.locked) {
-			if (executor.id === newThread.client.user.id) return;
-			if (oldThread.archived && !newThread.archived) return;
+		// === LOCKED ===
+		else if (!oldThread.locked && newThread.locked) {
+			await sendMessage(
+				emojis.ticket.bubble.lock,
+				"has __locked__ the thread",
+			);
+		}
 
-			await newThread.send({
-				content: `${emojis.ticketLock} **${executor.username}** __locked__ this thread ${formattedTime}`,
-			});
+		// === UNARCHIVED but still locked (staff-only reopen) ===
+		else if (
+			oldThread.archived &&
+			!newThread.archived &&
+			newThread.locked
+		) {
+			await sendMessage(
+				emojis.ticket.bubble.reopen,
+				"has __re-opened__ the thread, but it is **staffs only**",
+			);
+		}
+
+		// === FULLY REOPENED ===
+		else if (oldThread.archived && !newThread.archived) {
+			await sendMessage(
+				emojis.ticket.bubble.reopen,
+				"has __re-opened__ the thread",
+			);
 		}
 	},
 };

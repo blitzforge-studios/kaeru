@@ -1,4 +1,10 @@
-import { time, EmbedBuilder } from "discord.js";
+import {
+	time,
+	TextDisplayBuilder,
+	SeparatorSpacingSize,
+	SeparatorBuilder,
+	MessageFlags,
+} from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 
 export default {
@@ -13,16 +19,27 @@ export default {
 		const formattedTime = time(new Date(), "R");
 
 		await interaction.reply({
-			content: `${emojis.ticketClose} **${interaction.user.username}** __force closed__ this thread as completed at ${formattedTime}`,
-			embeds: [
-				new EmbedBuilder()
-					.setAuthor({
-						name: `${interaction.user.username} commented`,
-						iconURL: interaction.user.displayAvatarURL(),
-					})
-					.setColor(0xff3500)
-					.setDescription(closeReason),
+			components: [
+				new TextDisplayBuilder().setContent(
+					`# ${emojis.ticket.bubble.close}`,
+				),
+				new TextDisplayBuilder().setContent(
+					`-# **<@!${interaction.user.id}>** has __force closed__ the thread as completed ${formattedTime}`,
+				),
+				new SeparatorBuilder()
+					.setSpacing(SeparatorSpacingSize.Large)
+					.setDivider(false),
+				new TextDisplayBuilder().setContent(
+					[`### Comment`, ">>> " + closeReason].join("\n"),
+				),
+				new SeparatorBuilder()
+					.setSpacing(SeparatorSpacingSize.Small)
+					.setDivider(true),
 			],
+			flags: MessageFlags.IsComponentsV2,
+			allowedMentions: {
+				parse: [],
+			},
 		});
 
 		await interaction.channel.setLocked(true);

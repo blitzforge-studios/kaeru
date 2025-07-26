@@ -1,15 +1,56 @@
 export const emojis = {
 	// ticket
-	ticket: "<:ticket:1331654460325498931>",
-	ticketCreated: "<:ticket_created:1331655022357905419>",
-	ticketDone: "<:bubble_done:1398419074190544927>",
-	ticketStale: "<:bubble_stale:1398418996113703013>",
-	ticketClose: "<:bubble_force_archived:1398419260023509006>",
-	ticketReopen: "<:bubble_reopen:1398421205429518416>",
-	ticketLock: "<:bubble_lock:1398418878350102608>",
-	ticketLockOpen: "<:bubble_key:1398418443505500190>",
+	ticket: {
+		create: "<:ticket:1331654460325498931>",
+		created: "<:ticket_created:1331655022357905419>",
 
-	archive: "<:bubble_archive:1398421455485538324>",
+		bubble: {
+			done: "<:bubble_done:1398639729070706698>",
+			stale: "<:bubble_stale:1398639787891621888>",
+			close: "<:bubble_close:1398639706937495583>",
+			reopen: "<:bubble_reopen:1398639774369316945>",
+
+			archive: "<:bubble_archive:1398639689371484170>",
+			lock: "<:bubble_lock:1398639760481714256>",
+			key: "<:bubble_key:1398639745088884746>",
+		},
+
+		circle: {
+			done: "<:circle_done:1398639813904830484>",
+			stale: "<:circle_stale:1398639840421085204>",
+			close: "<:circle_close:1398639801841750076>",
+			reopen: "<:circle_reopen:1398639827443781704>",
+		},
+
+		label: {
+			bug: "<:label_bug:1375482268109377536>",
+			reward: "<:label_reward:1375482431251152956>",
+			question: "<:label_question:1375482334232444988>",
+			discussion: "<:label_discussion:1375482386183356446>",
+			help: "<:label_help:1375482474280255539>",
+		},
+	},
+
+	// reactions
+	reactions: {
+		kaeru: {
+			heart: "<:react_Heart:1398610708215762976>",
+			thumbsup: "<:react_ThumbsUp:1398610756588535869>",
+			thumbsdown: "<:react_ThumbsDown:1398610739509461072>",
+			haha: "<:react_Haha:1398610688615907428>",
+			emphasize: "<:react_Emphasize:1398610644324061326>",
+			question: "<:react_Question:1398610723751596101>",
+		},
+
+		user: {
+			heart: "<:reaction_heart_u:1375476629316567061>",
+			thumbsup: "<:reaction_thumbsup_u:1375476669149876234>",
+			thumbsdown: "<:reaction_thumbsdown_u:1375476654977319012>",
+			haha: "<:reaction_haha_u:1375476616611889212>",
+			emphasize: "<:reaction_emphasize_u:1375476602041012295>",
+			question: "<:reaction_question_u:1375476642104999999>",
+		},
+	},
 
 	// memes & nsfw
 	brain: "<:bubble_brain:1398609595903250575>",
@@ -35,24 +76,6 @@ export const emojis = {
 		questionLabel: "<:label_question:1375482334232444988>",
 		discussionLabel: "<:label_discussion:1375482386183356446>",
 		helpLabel: "<:label_help:1375482474280255539>",
-	},
-
-	reactions: {
-		// kaeru
-		reaction_heart: "<:react_Heart:1398610708215762976>",
-		reaction_thumbsup: "<:react_ThumbsUp:1398610756588535869>",
-		reaction_thumbsdown: "<:react_ThumbsDown:1398610739509461072>",
-		reaction_haha: "<:react_Haha:1398610688615907428>",
-		reaction_emphasize: "<:react_Emphasize:1398610644324061326>",
-		reaction_question: "<:react_Question:1398610723751596101>",
-
-		// user
-		reaction_heart_u: "<:reaction_heart_u:1375476629316567061>",
-		reaction_thumbsup_u: "<:reaction_thumbsup_u:1375476669149876234>",
-		reaction_thumbsdown_u: "<:reaction_thumbsdown_u:1375476654977319012>",
-		reaction_haha_u: "<:reaction_haha_u:1375476616611889212>",
-		reaction_emphasize_u: "<:reaction_emphasize_u:1375476602041012295>",
-		reaction_question_u: "<:reaction_question_u:1375476642104999999>",
 	},
 
 	// other
