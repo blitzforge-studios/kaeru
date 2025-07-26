@@ -9,9 +9,12 @@ export default {
 	data: {
 		customId: "create-ticket",
 	},
+
 	execute: async ({ interaction }) => {
+		const label = interaction.values[0] || "bug";
+
 		const modal = new ModalBuilder()
-			.setCustomId("create-ticket-modal")
+			.setCustomId(`create-ticket-modal|label-${label}`)
 			.setTitle("Ticket creation");
 
 		const input = new TextInputBuilder()
@@ -22,10 +25,9 @@ export default {
 			.setPlaceholder("Cannot post memes")
 			.setMinLength(5)
 			.setMaxLength(80);
-		const firstActionRow = new ActionRowBuilder().addComponents(input);
 
-		modal.addComponents(firstActionRow);
+		modal.addComponents(new ActionRowBuilder().addComponents(input));
 
-		await interaction.showModal(modal).catch((e) => console.log(e));
+		await interaction.showModal(modal).catch(console.error);
 	},
 };

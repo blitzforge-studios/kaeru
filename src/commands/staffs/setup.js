@@ -175,12 +175,14 @@ export default {
 		const guild = interaction.guild;
 
 		// ticket system
-		if (interaction.options.getSubcommand() == "ticket") {
-			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+		if (interaction.options.getSubcommand() === "ticket") {
+			await interaction.deferReply({
+				flags: MessageFlags.Ephemeral,
+			});
 
 			const embedDescription =
 				interaction.options.getString("description");
-			const staffRole = interaction.options.getRole("staff_role").id;
+			const staffRole = interaction.options.getRole("staff_role")?.id;
 			const banner = interaction.options.getAttachment("image");
 			const sendingChannel = interaction.options.getChannel("channel");
 
@@ -193,7 +195,7 @@ export default {
 					])
 			) {
 				return interaction.editReply({
-					content: `${emojis.danger} I don't have send messages or view channel permissions in ${sendingChannel} to sending creating ticket permission!`,
+					content: `${emojis.danger} I don't have permission to send messages or view ${sendingChannel} channel.`,
 				});
 			}
 
@@ -219,14 +221,13 @@ export default {
 						new MediaGalleryItemBuilder().setURL(
 							banner
 								? banner.url
-								: "https://media.discordapp.net/attachments/736571695170584576/1339321371502837780/Image.png?ex=67ae4bba&is=67acfa3a&hm=57b7c1901d5a6c0d3629d01fbc790d9f01f828f2b35984c3fb6ecb68c10d54a0&=&width=1956&height=886",
+								: "https://media.discordapp.net/attachments/736571695170584576/1339321371502837780/Image.png",
 						),
 					),
 				);
 
-			const createticketMenu = new StringSelectMenuBuilder()
+			const createTicketMenu = new StringSelectMenuBuilder()
 				.setCustomId("create-ticket")
-				.setDisabled(false)
 				.setMaxValues(1)
 				.setPlaceholder("Create a ticket about...")
 				.addOptions([
@@ -235,59 +236,57 @@ export default {
 						.setDescription(
 							"Reporting something that's not working",
 						)
-						.setValue("label-bug")
+						.setValue("bug")
 						.setEmoji(emojis.ticket.label.bug),
 					new StringSelectMenuOptionBuilder()
 						.setLabel("Reward")
 						.setDescription("Creating a reward for giveaways")
-						.setValue("label-reward")
+						.setValue("reward")
 						.setEmoji(emojis.ticket.label.reward),
 					new StringSelectMenuOptionBuilder()
 						.setLabel("Question")
 						.setDescription("Asking an important question")
-						.setValue("label-question")
+						.setValue("question")
 						.setEmoji(emojis.ticket.label.question),
 					new StringSelectMenuOptionBuilder()
 						.setLabel("Discussion")
 						.setDescription("Starting a general discussion")
-						.setValue("label-discussion")
+						.setValue("discussion")
 						.setEmoji(emojis.ticket.label.discussion),
 					new StringSelectMenuOptionBuilder()
 						.setLabel("Help")
 						.setDescription("Requesting some help")
-						.setValue("label-help")
+						.setValue("help")
 						.setEmoji(emojis.ticket.label.help),
 				]);
 
-			const row = new ActionRowBuilder().addComponents(
-				createticketMenu,
-			);
-
-			await interaction.editReply({
-				content: `${emojis.ticket.created} Created the ticket system succesfully!`,
-				flags: MessageFlags.Ephemeral,
-			});
-
-			await saveStaffRoleId(guild.id, staffRole);
+			const row = new ActionRowBuilder().addComponents(createTicketMenu);
 
 			await sendingChannel.send({
 				components: [container, row],
 				flags: MessageFlags.IsComponentsV2,
 			});
 
+			await saveStaffRoleId(interaction.guild.id, staffRole);
+
+			await interaction.editReply({
+				content: `${emojis.ticket.created} Created the ticket system successfully in ${sendingChannel}.`,
+			});
+
 			if (
 				!interaction.guild.members.me.permissions.has(
 					PermissionFlagsBits.ManageMessages,
 				)
-			)
-				return interaction.followUp({
+			) {
+				await interaction.followUp({
 					content: `## ${
 						emojis.danger + " " + underline("Recommending")
 					}\nIf Kaeru has ${bold(
 						"Manage Messages",
-					)} permission, it will be very easy to reach at first message with pinned messages for staff members.`,
+					)} permission, it will be very easy to reach the first message with pinned messages for staff members.`,
 					flags: MessageFlags.Ephemeral,
 				});
+			}
 		}
 
 		// logs system
