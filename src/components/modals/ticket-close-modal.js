@@ -1,12 +1,9 @@
 import {
 	time,
-	EmbedBuilder,
-	ContainerBuilder,
 	TextDisplayBuilder,
 	SeparatorSpacingSize,
 	SeparatorBuilder,
 	MessageFlags,
-	SectionBuilder,
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 
@@ -26,25 +23,18 @@ export default {
 				new TextDisplayBuilder().setContent(
 					`# ${emojis.ticket.bubble.close}`,
 				),
-				new SeparatorBuilder()
-					.setSpacing(SeparatorSpacingSize.Small)
-					.setDivider(true),
 				new TextDisplayBuilder().setContent(
 					`-# **<@!${interaction.user.id}>** has __force closed__ the thread as completed ${formattedTime}`,
 				),
-				new ContainerBuilder()
-					.addSectionComponents(
-						new SectionBuilder()
-							.addTextDisplayComponents(
-								new TextDisplayBuilder().setContent(
-									closeReason,
-								),
-							)
-							.setThumbnailAccessory(
-								interaction.user.displayAvatarURL(),
-							),
-					)
-					.setAccentColor(0xff3500),
+				new SeparatorBuilder()
+					.setSpacing(SeparatorSpacingSize.Large)
+					.setDivider(false),
+				new TextDisplayBuilder().setContent(
+					[`### Comment`, ">>> " + closeReason].join("\n"),
+				),
+				new SeparatorBuilder()
+					.setSpacing(SeparatorSpacingSize.Small)
+					.setDivider(true),
 			],
 			flags: MessageFlags.IsComponentsV2,
 			allowedMentions: {

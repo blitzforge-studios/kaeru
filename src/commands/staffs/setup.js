@@ -16,6 +16,8 @@ import {
 	MediaGalleryItemBuilder,
 	SeparatorBuilder,
 	SeparatorSpacingSize,
+	StringSelectMenuBuilder,
+	StringSelectMenuOptionBuilder,
 } from "discord.js";
 import { emojis } from "../../resources/emojis.js";
 import { basePermissions } from "../../resources/BotPermissions.js";
@@ -222,14 +224,43 @@ export default {
 					),
 				);
 
-			const createticketButton = new ButtonBuilder()
-				.setCustomId(`create-ticket`)
-				.setLabel("Create ticket")
-				.setStyle(ButtonStyle.Secondary)
-				.setEmoji(emojis.ticket.create);
+			const createticketMenu = new StringSelectMenuBuilder()
+				.setCustomId("create-ticket")
+				.setDisabled(false)
+				.setMaxValues(1)
+				.setPlaceholder("Create a ticket about...")
+				.addOptions([
+					new StringSelectMenuOptionBuilder()
+						.setLabel("Bug")
+						.setDescription(
+							"Reporting something that's not working",
+						)
+						.setValue("label-bug")
+						.setEmoji(emojis.ticket.label.bug),
+					new StringSelectMenuOptionBuilder()
+						.setLabel("Reward")
+						.setDescription("Creating a reward for giveaways")
+						.setValue("label-reward")
+						.setEmoji(emojis.ticket.label.reward),
+					new StringSelectMenuOptionBuilder()
+						.setLabel("Question")
+						.setDescription("Asking an important question")
+						.setValue("label-question")
+						.setEmoji(emojis.ticket.label.question),
+					new StringSelectMenuOptionBuilder()
+						.setLabel("Discussion")
+						.setDescription("Starting a general discussion")
+						.setValue("label-discussion")
+						.setEmoji(emojis.ticket.label.discussion),
+					new StringSelectMenuOptionBuilder()
+						.setLabel("Help")
+						.setDescription("Requesting some help")
+						.setValue("label-help")
+						.setEmoji(emojis.ticket.label.help),
+				]);
 
 			const row = new ActionRowBuilder().addComponents(
-				createticketButton,
+				createticketMenu,
 			);
 
 			await interaction.editReply({

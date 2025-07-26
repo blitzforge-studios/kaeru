@@ -1,6 +1,5 @@
 import {
 	time,
-	bold,
 	MessageFlags,
 	TextDisplayBuilder,
 	SeparatorBuilder,
@@ -21,11 +20,25 @@ export async function setLockedAndUpdateMessage(interaction, reason = "") {
 
 	await interaction.channel.setLocked(true);
 
-	await interaction.update({
-		content: `Locked this ticket successfully. To unlock this ticket, please enable it manually on "unlock" button.`,
-		embeds: [],
-		components: [],
-	});
+	try {
+		if (interaction.replied || interaction.deferred) {
+			await interaction.editReply({
+				content: `Locked this ticket successfully. To unlock this ticket, please enable it manually on "unlock" button.`,
+				components: [],
+				embeds: [],
+			});
+		} else {
+			await interaction.update({
+				content: `Locked this ticket successfully. To unlock this ticket, please enable it manually on "unlock" button.`,
+				components: [],
+				embeds: [],
+			});
+		}
+	} catch {
+		await interaction.channel.send(
+			`Locked this ticket successfully. To unlock this ticket, please enable it manually on "unlock" button.`,
+		);
+	}
 
 	await interaction.channel.send({
 		components: [
@@ -33,7 +46,7 @@ export async function setLockedAndUpdateMessage(interaction, reason = "") {
 				`# ${emojis.ticket.bubble.lock}`,
 			),
 			new TextDisplayBuilder().setContent(
-				`-# **<@!${interaction.user.id}>** locked${
+				`-# **<@!${interaction.user.id}>** has __locked__ the thread${
 					reason ? ` ${reason}` : ""
 				} and limited conversation to staffs ${formattedTime}`,
 			),
