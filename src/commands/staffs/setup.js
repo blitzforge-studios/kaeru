@@ -219,7 +219,7 @@ export default {
 			};
 
 			let imageUrl =
-				"https://media.discordapp.net/attachments/736571695170584576/1339321371502837780/Image.png"; // kaeru's default image for ticket banner
+				"https://cdn.discordapp.com/attachments/736571695170584576/1398695161923375144/default_ticket_image.png?ex=68864be1&is=6884fa61&hm=0e8b5986b4ee4a9451a844bf1e6b1eecb3abd4d125f5c5670ece213d82d2ee36&"; // kaeru's default image for ticket banner
 
 			if (customImageUrl) {
 				if (isValidImageUrl(customImageUrl)) {
