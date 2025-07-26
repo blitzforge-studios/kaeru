@@ -104,28 +104,28 @@ export default {
 						})
 						.setRequired(false),
 				)
-				.addAttachmentOption((option) =>
+				.addStringOption((option) =>
 					option
-						.setName("image")
+						.setName("image_url")
 						.setNameLocalizations({
-							ChineseCN: "图片",
-							it: "immagine",
-							tr: "resim",
-							"pt-BR": "imagem",
-							ro: "imagine",
-							el: "εικόνα",
+							ChineseCN: "图片链接",
+							it: "url_immagine",
+							tr: "resim_bağlantısı",
+							"pt-BR": "url_imagem",
+							ro: "url_imagine",
+							el: "σύνδεσμος_εικόνας",
 						})
 						.setDescription(
-							"Upload your own banner for ticket message!",
+							"Provide a custom image URL for the ticket banner!",
 						)
 						.setDescriptionLocalizations({
-							ChineseCN: "为工单消息上传您自己的图片！",
-							it: "Carica la tua immagine per il messaggio del ticket!",
-							tr: "Ticket mesajı için kendi resminizi yükleyin!",
+							ChineseCN: "为工单横幅提供自定义图片链接！",
+							it: "Fornisci un URL immagine personalizzato per il banner del ticket!",
+							tr: "Ticket banner'ı için özel bir resim URL'si sağlayın!",
 							"pt-BR":
-								"Faça o upload da sua própria imagem para a mensagem do ticket!",
-							ro: "Încărcați propria imagine pentru mesajul biletului!",
-							el: "Μεταφορτώστε τη δική σας εικόνα για το μήνυμα του εισιτηρίου!",
+								"Forneça uma URL de imagem personalizada para o banner do ticket!",
+							ro: "Furnizați o adresă URL de imagine personalizată pentru bannerul biletului!",
+							el: "Παρέχετε μια προσαρμοσμένη διεύθυνση URL εικόνας για το banner του εισιτηρίου!",
 						})
 						.setRequired(false),
 				),
@@ -183,7 +183,7 @@ export default {
 			const embedDescription =
 				interaction.options.getString("description");
 			const staffRole = interaction.options.getRole("staff_role")?.id;
-			const banner = interaction.options.getAttachment("image");
+			const customImageUrl = interaction.options.getString("image_url");
 			const sendingChannel = interaction.options.getChannel("channel");
 
 			if (
@@ -197,6 +197,38 @@ export default {
 				return interaction.editReply({
 					content: `${emojis.danger} I don't have permission to send messages or view ${sendingChannel} channel.`,
 				});
+			}
+
+			// Function to validate if URL is a valid image URL
+			const isValidImageUrl = (url) => {
+				if (!url) return false;
+				try {
+					new URL(url);
+					// Check if URL ends with common image extensions or contains image-related domains
+					return (
+						/\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i.test(
+							url,
+						) ||
+						/discord|imgur|gyazo|prnt\.sc|i\.redd\.it|media\.tenor|giphy/i.test(
+							url,
+						)
+					);
+				} catch {
+					return false;
+				}
+			};
+
+			let imageUrl =
+				"https://media.discordapp.net/attachments/736571695170584576/1339321371502837780/Image.png"; // kaeru's default image for ticket banner
+
+			if (customImageUrl) {
+				if (isValidImageUrl(customImageUrl)) {
+					imageUrl = customImageUrl;
+				} else {
+					return interaction.editReply({
+						content: `# ${emojis.danger}\n-# The provided image URL is not valid. Please provide a direct link to an image (jpg, png, gif, etc.) or a supported image hosting service.\n> -# **Supported image hosting services:**\n> -# Discord, Imgur, Gyazo, Prnt.sc, i.redd.it, Tenor, Giphy`,
+					});
+				}
 			}
 
 			const container = new ContainerBuilder()
@@ -218,11 +250,7 @@ export default {
 				)
 				.addMediaGalleryComponents(
 					new MediaGalleryBuilder().addItems(
-						new MediaGalleryItemBuilder().setURL(
-							banner
-								? banner.url
-								: "https://media.discordapp.net/attachments/736571695170584576/1339321371502837780/Image.png",
-						),
+						new MediaGalleryItemBuilder().setURL(imageUrl),
 					),
 				);
 
