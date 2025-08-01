@@ -17,16 +17,18 @@ export default {
 			.setCustomId(`create-ticket-modal|label-${label}`)
 			.setTitle("Ticket creation");
 
-		const input = new TextInputBuilder()
-			.setCustomId("ticket-title")
-			.setLabel("Please explain your issue with a few words.")
+		const messageInput = new TextInputBuilder()
+			.setCustomId("message")
+			.setLabel("Please describe your issue in detail")
 			.setRequired(true)
-			.setStyle(TextInputStyle.Short)
-			.setPlaceholder("Cannot post memes")
-			.setMinLength(5)
-			.setMaxLength(80);
+			.setStyle(TextInputStyle.Paragraph)
+			.setPlaceholder(
+				"I am trying to tap the '+' icon, but I can't upload files?",
+			)
+			.setMinLength(20)
+			.setMaxLength(800);
 
-		modal.addComponents(new ActionRowBuilder().addComponents(input));
+		modal.addComponents(new ActionRowBuilder().addComponents(messageInput));
 
 		await interaction.showModal(modal).catch(console.error);
 	},
